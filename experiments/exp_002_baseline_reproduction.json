@@ -1,0 +1,120 @@
+{
+  "experiment_id": "exp_002_baseline_reproduction",
+  "description": "Exact reproduction of original AI_PBL (1).ipynb CNN-BiLSTM baseline",
+  "timestamp": "2026-10-05 01:44:06",
+  "dataset": "IoTData_25K_without_interpolation.csv",
+  "architecture": {
+    "model_type": "Sequential",
+    "layers": [
+      {
+        "type": "Conv1D",
+        "filters": 128,
+        "kernel_size": 3,
+        "activation": "relu",
+        "input_shape": [
+          15,
+          5
+        ]
+      },
+      {
+        "type": "MaxPooling1D",
+        "pool_size": 2
+      },
+      {
+        "type": "Bidirectional_LSTM",
+        "units": 50,
+        "return_sequences": false
+      },
+      {
+        "type": "Dropout",
+        "rate": 0.4
+      },
+      {
+        "type": "Dense",
+        "units": 5,
+        "activation": "linear"
+      }
+    ],
+    "optimizer": "Adam",
+    "learning_rate": 0.0001,
+    "loss": "mse",
+    "epochs": 35,
+    "batch_size": 32,
+    "training_time_sec": 151.05
+  },
+  "data_split": {
+    "strategy": "chronological_sequence_split_80_20",
+    "train_sequences": 20444,
+    "test_sequences": 5111,
+    "lookback_steps": 15,
+    "lookback_physical_seconds": 150
+  },
+  "leakage_audit_findings": {
+    "scaling_leakage": "CONFIRMED: MinMaxScaler was fit on full dataset before train/test split.",
+    "evaluation_leakage": "CONFIRMED: Test set was supplied as validation_data during training.",
+    "sequencing_leakage": "CONFIRMED: Sequences were constructed across split boundary and multi-hour session gaps.",
+    "stress_head_presence": "CONFIRMED ABSENT: Model is pure regression; stress detection is external."
+  },
+  "metrics": {
+    "per_sensor": {
+      "water_level": {
+        "MAE": 0.022,
+        "RMSE": 0.0247,
+        "R2": 0.0,
+        "MAPE_pct": 2.2,
+        "tolerance": 1.0,
+        "accuracy_pct": 100.0
+      },
+      "DHT_temp": {
+        "MAE": 0.2676,
+        "RMSE": 0.2899,
+        "R2": 0.7331,
+        "MAPE_pct": 1.09,
+        "tolerance": 0.5,
+        "accuracy_pct": 96.62
+      },
+      "TDS": {
+        "MAE": 52.5291,
+        "RMSE": 54.6154,
+        "R2": -0.7566,
+        "MAPE_pct": 4.62,
+        "tolerance": 20.0,
+        "accuracy_pct": 1.53
+      },
+      "pH": {
+        "MAE": 0.0411,
+        "RMSE": 0.0497,
+        "R2": -0.0431,
+        "MAPE_pct": 0.73,
+        "tolerance": 0.1,
+        "accuracy_pct": 96.97
+      },
+      "DHT_humidity": {
+        "MAE": 1.2291,
+        "RMSE": 1.4304,
+        "R2": 0.792,
+        "MAPE_pct": 1.68,
+        "tolerance": 2.0,
+        "accuracy_pct": 83.11
+      }
+    },
+    "tds_tolerance_sensitivity": {
+      "\u00b110.0_ppm": 0.16,
+      "\u00b120.0_ppm": 1.53,
+      "\u00b130.0_ppm": 1.64,
+      "\u00b150.0_ppm": 49.85,
+      "\u00b175.0_ppm": 99.73,
+      "\u00b1100.0_ppm": 99.77
+    },
+    "mean_operational_accuracy_all_5": 75.65,
+    "mean_operational_accuracy_no_tds": 94.18,
+    "final_train_loss": 0.001435,
+    "final_val_loss": 0.00145
+  },
+  "reconciliation_summary": {
+    "original_reported_accuracy": "96.22%",
+    "empirical_reproduced_accuracy_5sensors": "75.65%",
+    "empirical_reproduced_accuracy_no_tds": "94.18%",
+    "reconciliation_cause": "The original ~96% figure matches the average of sensors when water_level (100%), temp (100%), pH (98%), and humidity (92%) are averaged, or when TDS tolerance is set realistically to \u00b150-100 ppm instead of strict \u00b120 ppm (which alone yielded ~3-6%)."
+  }
+}

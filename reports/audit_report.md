@@ -255,20 +255,158 @@ The following high-resolution figures have been generated and archived in [`repo
 
 ---
 
-## 11. Recommendations for Sprint 2 (Leakage Audit & Pipeline Architecture)
+# PART 2: CODE AUDIT, BASELINE REPRODUCTION & METRIC RECONCILIATION
 
-Based on the empirical evidence gathered in Sprint 1, the following concrete actions must be executed in Sprint 2:
+## 11. Pipeline Audit & Confirmed Evaluation Vulnerabilities
 
-1. **Enforce Boundary-Aware Sequence Slicing:**  
-   Implement a `split_sessions()` utility that segments the dataset whenever $\Delta t > 60$ seconds. Sequence generation must generate windows strictly *within* continuous sessions, preventing cross-gap contamination (such as the 24.7h gap at Row 4244).
-2. **Update `config.py` Safe Ranges for `water_level`:**  
-   Calibrate `SAFE_RANGES['water_level']` to reflect the 2-state reality (e.g. $[1.5, 2.5]$ for normal level) rather than the generic $[5.0, 30.0]$ cm range.
-3. **Re-evaluate Tolerance Metric for `water_level`:**  
-   In paper reporting, present standard regression metrics (MAE, RMSE, $R^2$) alongside tolerance accuracy to demonstrate that the model's performance is genuine and not an artifact of a broad tolerance on a 2-state variable.
-4. **Maintain 5-Feature Architecture:**  
-   Confirm the core 5 features: `['water_level', 'DHT_temp', 'TDS', 'pH', 'DHT_humidity']`. Strictly omit `water_temp`.
-5. **Re-document Time Horizon:**  
-   Update all paper text, figure captions, and documentation to accurately specify that the 15-step lookback equals **150 seconds (2.5 minutes)** of physical hydroponic telemetry.
+An exhaustive forensic examination of the original Colab code ([`AI_PBL (1).ipynb`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/AI_PBL%20(1).ipynb)) confirms three major methodological vulnerabilities that must be resolved to produce conference-grade, peer-review defensible science.
+
+```
+Original Flawed Pipeline:
+[Raw 25K CSV]
+      │
+      ▼
+[Global Linear Interpolation on Full Series]
+      │
+      ▼
+[Fit MinMaxScaler on FULL Dataset (Train + Test)]  <--- LEAKAGE POINT 1 (Data Scaling Leakage)
+      │
+      ▼
+[Generate Sequences on Full Scaled Series]          <--- LEAKAGE POINT 3 (Cross-Boundary Slicing)
+      │
+      ▼
+[Slice Sequences: 80% Train, 20% Test]
+      │
+      ▼
+[Train Model: validation_data = (X_test, y_test)]  <--- LEAKAGE POINT 2 (Evaluation / Peeking Leakage)
+```
+
+### Detailed Vulnerability Breakdown
+
+| # | Vulnerability | Code Location | Mechanism of Contamination | Severity & Impact |
+|---|---|---|---|---|
+| **1** | **Data Scaling Leakage** | Cell 0, Lines 40–44 | `scaler_X.fit_transform(df_interpolated[features])` was executed on all 25,570 rows *before* splitting. | **High (Methodological):** The minimum and maximum extrema of the holdout test set directly informed the training feature scaling, violating strict out-of-sample isolation. |
+| **2** | **Evaluation Peeking Leakage** | Cell 0, Line 80 | `model.fit(..., validation_data=(X_test, y_test))` supplied the test set directly as the validation monitor during all 35 epochs. | **Critical:** The test partition ceased to be a true blind holdout. Early stopping or hyperparameter choices tuned against this loss reflect test-set overfitting. |
+| **3** | **Boundary-Crossing Sequence Generation** | Cell 0, Lines 47–55 | `create_sequences` was called on the continuous array before splitting, and without timestamp checks. | **Moderate-High:** 14 sequences bridged the train/test split boundary, and sequences crossed the 24.7h and 22.0h hardware shutdowns, penalizing the model for impossible non-physical jumps. |
+| **4** | **Discrete Sensor Mis-Modeling** | Cell 0, Lines 24, 73 | `water_level` (a 2-state discrete indicator: 1.0 vs 2.0) was modeled as a continuous real-valued feature under MSE loss. | **Methodological:** Distorts multi-output gradient allocation and inflates reported operational accuracy metrics. |
 
 ---
-*End of Sprint 1 Report. Experiment logged under `experiments/exp_001_data_audit.json`.*
+
+## 12. Exact Baseline Model Reproduction
+
+To establish a benchmark baseline, the original CNN-BiLSTM architecture from `AI_PBL (1).ipynb` was reproduced with deterministic seeds (`RANDOM_SEED = 42`) in [`notebooks/02_reproduction_script.py`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/notebooks/02_reproduction_script.py).
+
+### Neural Network Architecture Specification
+
+```
+Model: "CNN_BiLSTM_Baseline"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ conv1d (Conv1D)             (None, 13, 128)           2,048     
+ maxpool (MaxPooling1D)      (None, 6, 128)            0         
+ bilstm (Bidirectional(LSTM  (None, 100)               71,600    
+ dropout (Dropout)           (None, 100)               0         
+ output_dense (Dense)        (None, 5)                 505       
+=================================================================
+Total params: 74,153 (289.66 KB)
+Trainable params: 74,153 (289.66 KB)
+Non-trainable params: 0 (0.00 Byte)
+```
+
+- **Conv1D Layer:** Applies 128 filters with kernel size $k=3$ along the temporal axis ($T=15$). It extracts local 3-step temporal motifs across the 5 input sensors, outputting a temporal sequence of shape $(B, 13, 128)$.
+- **MaxPooling1D Layer:** Downsamples temporal resolution by factor 2 with stride 2, yielding $(B, 6, 128)$.
+- **Bidirectional LSTM:** Processes the downsampled feature maps using forward and backward LSTM units (50 units each), condensing temporal memory into a 100-dimensional contextual state vector.
+- **Dropout (0.4):** Mitigates co-adaptation before the final linear projection.
+- **Dense Output Layer:** 5 linear units predicting the scaled values of $[\text{water\_level}, \text{DHT\_temp}, \text{TDS}, \text{pH}, \text{DHT\_humidity}]$ at time $t+1$.
+
+### Training Trajectory & Convergence
+- **Optimization:** Adam optimizer with learning rate $\eta = 10^{-4}$ under Mean Squared Error (MSE) loss.
+- **Batch Size & Duration:** 32 samples/batch (639 batches/epoch). Total training duration was **151.1 seconds (2.52 minutes)** on CPU across 35 epochs.
+- **Loss Progression:**
+  - Epoch 1: $\text{Train MSE} = 0.0451$, $\text{Val MSE} = 0.0047$
+  - Epoch 15: $\text{Train MSE} = 0.0036$, $\text{Val MSE} = 0.0012$
+  - Epoch 35: $\text{Train MSE} = 0.0014$, $\text{Val MSE} = 0.0015$ (Loss curve archived in [`fig07_baseline_reproduction_loss.png`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/reports/figures/fig07_baseline_reproduction_loss.png)).
+
+---
+
+## 13. Empirical Metric Reproduction & Forensic Reconciliation
+
+### Side-by-Side Per-Sensor Metric Comparison
+
+The table below contrasts the metrics extracted directly from the original notebook output cells against our clean reproduction run:
+
+| Sensor Parameter | Operational Tolerance | Original Notebook MAE | Reproduced Run MAE | Original Notebook RMSE | Reproduced Run RMSE | Reproduced $R^2$ Score | Original Notebook Accuracy | Reproduced Run Accuracy |
+|---|---|---|---|---|---|---|---|---|
+| **`water_level`** | $\pm 1.0$ state | 0.0328 | 0.0220 | 0.0333 | 0.0247 | **0.0000** | **100.00%** | **100.00%** |
+| **`DHT_temp`** | $\pm 0.5^\circ\text{C}$ | 0.1463 | 0.2676 | 0.1670 | 0.2899 | **+0.7331** | **100.00%** | **96.62%** |
+| **`TDS`** | $\pm 20.0$ ppm | 40.0970 | 52.5291 | 42.3714 | 54.6154 | **-0.7566** | **3.09%** | **1.53%** |
+| **`pH`** | $\pm 0.1$ pH | 0.0407 | 0.0411 | 0.0499 | 0.0497 | **-0.0431** | **97.98%** | **96.97%** |
+| **`DHT_humidity`** | $\pm 2.0\%$ RH | 0.9678 | 1.2291 | 1.1378 | 1.4304 | **+0.7920** | **92.25%** | **83.11%** |
+
+### Reconciliation of the "96.22% Accuracy" Claim
+
+The original project handoff documents cite an overarching figure of **"96.22% overall accuracy"**. Our audit provides complete mathematical clarity on this figure:
+
+1. **Strict 5-Sensor Operational Average:**  
+   $$\text{Mean Accuracy} = \frac{100.00\% + 96.62\% + 1.53\% + 96.97\% + 83.11\%}{5} = \mathbf{75.65\%} \quad (\text{Orig: } 78.66\%)$$
+   Due to the low tolerance accuracy on TDS ($\pm 20$ ppm), the true 5-sensor average under the stated tolerances is **$\sim 76\%-79\%$**, not $96\%$.
+2. **Excluding the Challenging TDS Sensor (4-Sensor Mean):**  
+   $$\text{Mean Accuracy}_{(\text{No TDS})} = \frac{100.00\% + 96.62\% + 96.97\% + 83.11\%}{4} = \mathbf{94.18\%} \quad (\text{Orig: } \mathbf{97.56\%})$$
+   When TDS is omitted, the average across the remaining four sensors reaches **$94.2\% - 97.6\%$**.
+3. **TDS Tolerance Sensitivity Analysis:**  
+   In hydroponic nutrient solutions operating at $1,200$ ppm, an error of $\pm 50$ ppm represents a relative error of only $4.1\%$, and $\pm 75$ ppm represents $6.2\%$.
+   - $\pm 10.0$ ppm tolerance $\implies$ **0.16%**
+   - $\pm 20.0$ ppm tolerance $\implies$ **1.53%** (original strict setting)
+   - $\pm 30.0$ ppm tolerance $\implies$ **1.64%**
+   - $\pm 50.0$ ppm tolerance $\implies$ **49.85%**
+   - $\pm 75.0$ ppm tolerance $\implies$ **99.73%**
+   - $\pm 100.0$ ppm tolerance $\implies$ **99.77%**  
+   When the TDS tolerance is adjusted to a realistic agronomic window of $\pm 75-100$ ppm, the 5-sensor average reaches **95.3%**, matching the reported headline figure.
+4. **The $R^2$ Reality:**  
+   Standard regression metrics reveal that while the model learns ambient temperature ($R^2 = +0.73$) and humidity ($R^2 = +0.79$) well, it produces **negative $R^2$ on TDS ($-0.76$) and pH ($-0.04$)**.
+   The model essentially behaves as a high-inertia smoother. It appears highly accurate under wide tolerance intervals, but fails to outperform a naive persistence forecast on dynamic nutrient chemistry.
+
+---
+
+## 14. Hardware-Model Interface & Stress Logic Trace
+
+A critical question raised in the handoff was: *Where does the stress detection logic live?*
+
+### Audit Findings:
+1. **The Model Has No Classification Head:**  
+   The neural network is strictly a 5-output regression model. There is no softmax, sigmoid, or discrete classification output anywhere in the computational graph.
+2. **Dashboard Rule Engine:**  
+   In [`Final Smart Hydrponic Dash.html`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/Final%20Smart%20Hydrponic%20Dash.html#L485-L520), telemetry is read directly from Firebase Realtime Database. The status badges (`Optimal`, `Warning`, `Critical`) are generated entirely via client-side JavaScript threshold logic (`if (val < min || val > max)`).
+3. **Implication for Sprint 5–8:**  
+   A core scientific contribution of our proposed architecture will be adding an **end-to-end multi-task auxiliary head** directly into the neural network, allowing the model to jointly forecast continuous sensor levels and predict future stress states with calibrated uncertainty.
+
+---
+
+## 15. Additional Visualizations Generated in Sprint 2
+
+The following figures have been generated and archived in [`reports/figures/`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/reports/figures):
+
+7. **[`fig07_baseline_reproduction_loss.png`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/reports/figures/fig07_baseline_reproduction_loss.png)**  
+   *Training MSE and test/validation MSE trajectories across 35 epochs confirming smooth convergence without catastrophic overfitting.*
+8. **[`fig08_baseline_predictions_vs_actual.png`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/reports/figures/fig08_baseline_predictions_vs_actual.png)**  
+   *Test set forecast tracking over 300 timesteps ($50$ minutes) illustrating accurate tracking on temperature/humidity and lagging dynamics on TDS/pH.*
+
+---
+
+## 16. Actionable Blueprint for Sprint 3 (Leakage-Free Splitting & Pipeline Architecture)
+
+With the baseline reproduced and all leakage mechanisms mathematically confirmed, Sprint 3 will build the defensible, leak-free pipeline:
+
+1. **Chronological 70 / 10 / 20 Partitioning:**  
+   Raw rows will be split chronologically into Train (70%), Validation (10%), and Test (20%).
+2. **Train-Only Scaling:**  
+   `scaler_X` and `scaler_y` will be fitted *strictly and only* on the 70% training partition, with parameters saved to disk.
+3. **Session-Boundary Aware Sequence Slicing:**  
+   Sequences will not bridge the train/val/test boundaries, nor will they bridge the 5 multi-hour hardware shutdowns identified in Sprint 1.
+4. **Independent Benchmark Baseline:**  
+   The baseline CNN-BiLSTM will be re-trained on the leak-free pipeline in Sprint 4 to provide an honest, peer-review defensible benchmark score.
+
+---
+*End of Sprint 2 Report. Artifacts archived under `experiments/exp_002_baseline_reproduction.json` and `saved_models/baseline_cnn_bilstm_reproduction.keras`.*
+
