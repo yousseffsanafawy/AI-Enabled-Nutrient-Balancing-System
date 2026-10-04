@@ -101,7 +101,7 @@ SAFE_RANGES = {
     "pH":          (5.5, 6.5),    # optimal hydroponic pH range
     "TDS":         (600, 1400),   # ppm — general leafy greens
     "DHT_temp":    (18.0, 28.0),  # °C ambient
-    "water_level": (5.0, 30.0),   # cm (system-dependent)
+    "water_level": (1.5, 2.5),    # operational state: 2.0 = normal/adequate, 1.0 = low (calibrated in Sprint 1)
     "DHT_humidity":(50.0, 80.0),  # % RH
 }
 

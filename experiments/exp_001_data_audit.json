@@ -1,0 +1,336 @@
+{
+  "dataset_name": "IoTData_25K_without_interpolation.csv",
+  "n_rows": 25570,
+  "n_columns": 14,
+  "columns": [
+    "timestamp",
+    "id",
+    "pH",
+    "TDS",
+    "water_level",
+    "DHT_temp",
+    "DHT_humidity",
+    "water_temp",
+    "pH_reducer",
+    "add_water",
+    "nutrients_adder",
+    "humidifier",
+    "ex_fan",
+    "isDefault"
+  ],
+  "features": [
+    "water_level",
+    "DHT_temp",
+    "TDS",
+    "pH",
+    "DHT_humidity"
+  ],
+  "time_span": {
+    "start": "2023-12-21T11:17:03",
+    "end": "2023-12-26T21:36:40",
+    "duration_hours": 130.33,
+    "duration_days": 5.43
+  },
+  "sampling_intervals_sec": {
+    "min": 2.0,
+    "p01": 5.0,
+    "p05": 9.0,
+    "p25": 10.0,
+    "median": 10.0,
+    "mean": 18.34944659548672,
+    "p75": 10.0,
+    "p95": 11.0,
+    "p99": 15.0,
+    "max": 89003.0,
+    "mode": 10.0
+  },
+  "major_gaps_gt_1h": [
+    {
+      "row_index": 117,
+      "id": 25118,
+      "gap_start": "2023-12-21T11:37:52",
+      "gap_end": "2023-12-21T14:36:59",
+      "gap_duration_sec": 10747.0,
+      "gap_duration_hours": 2.99,
+      "pre_gap_tds": 772.34,
+      "post_gap_tds": 710.59,
+      "pre_gap_ph": 5.39,
+      "post_gap_ph": 5.36
+    },
+    {
+      "row_index": 243,
+      "id": 25244,
+      "gap_start": "2023-12-21T15:05:39",
+      "gap_end": "2023-12-21T22:44:08",
+      "gap_duration_sec": 27509.0,
+      "gap_duration_hours": 7.64,
+      "pre_gap_tds": 703.22,
+      "post_gap_tds": 1001.06,
+      "pre_gap_ph": 5.37,
+      "post_gap_ph": 5.65
+    },
+    {
+      "row_index": 4244,
+      "id": 29245,
+      "gap_start": "2023-12-22T09:58:27",
+      "gap_end": "2023-12-23T10:41:50",
+      "gap_duration_sec": 89003.0,
+      "gap_duration_hours": 24.72,
+      "pre_gap_tds": 1176.13,
+      "post_gap_tds": 2271.29,
+      "pre_gap_ph": 5.65,
+      "post_gap_ph": 6.39
+    },
+    {
+      "row_index": 12885,
+      "id": 37886,
+      "gap_start": "2023-12-24T10:52:59",
+      "gap_end": "2023-12-25T08:54:38",
+      "gap_duration_sec": 79299.0,
+      "gap_duration_hours": 22.03,
+      "pre_gap_tds": 1250.08,
+      "post_gap_tds": 1294.61,
+      "pre_gap_ph": 5.99,
+      "post_gap_ph": 5.79
+    },
+    {
+      "row_index": 13470,
+      "id": 38471,
+      "gap_start": "2023-12-25T10:33:29",
+      "gap_end": "2023-12-25T11:37:05",
+      "gap_duration_sec": 3816.0,
+      "gap_duration_hours": 1.06,
+      "pre_gap_tds": 1311.09,
+      "post_gap_tds": 1253.69,
+      "pre_gap_ph": 5.71,
+      "post_gap_ph": 5.76
+    }
+  ],
+  "sensor_distributions": {
+    "pH": {
+      "min": 5.28,
+      "p01": 5.37,
+      "p25": 5.61,
+      "median": 5.71,
+      "mean": 5.731570981619085,
+      "p75": 5.87,
+      "p99": 6.04,
+      "max": 7.3,
+      "std": 0.15702721420116797,
+      "skewness": 0.2664289521349295,
+      "kurtosis": 1.2078582763549823,
+      "lag1_autocorr": 0.9572681501577603,
+      "unique_values": 124,
+      "max_flatline_steps": 17,
+      "max_flatline_duration_min": 2.8
+    },
+    "TDS": {
+      "min": 607.53,
+      "p01": 669.14,
+      "p25": 1131.22,
+      "median": 1260.6399999999999,
+      "mean": 1184.3797262416895,
+      "p75": 1372.37,
+      "p99": 1471.06,
+      "max": 2271.29,
+      "std": 239.12362404880602,
+      "skewness": -0.9835523413081895,
+      "kurtosis": -0.23666347521382214,
+      "lag1_autocorr": 0.9988719151220149,
+      "unique_values": 12863,
+      "max_flatline_steps": 6,
+      "max_flatline_duration_min": 1.0
+    },
+    "water_level": {
+      "min": 1.0,
+      "p01": 1.0,
+      "p25": 1.0,
+      "median": 2.0,
+      "mean": 1.504360578803285,
+      "p75": 2.0,
+      "p99": 2.0,
+      "max": 2.0,
+      "std": 0.499966317276966,
+      "skewness": -0.017444001832731856,
+      "kurtosis": -1.999768993878776,
+      "lag1_autocorr": 0.9999804447300953,
+      "unique_values": 5,
+      "max_flatline_steps": 12895,
+      "max_flatline_duration_min": 2149.2
+    },
+    "DHT_temp": {
+      "min": 18.1,
+      "p01": 22.9,
+      "p25": 23.3,
+      "median": 23.9,
+      "mean": 23.960142745404767,
+      "p75": 24.6,
+      "p99": 25.4,
+      "max": 25.6,
+      "std": 0.7024762128061144,
+      "skewness": 0.29796170561568497,
+      "kurtosis": -0.9165054944769238,
+      "lag1_autocorr": 0.9952983429548458,
+      "unique_values": 62,
+      "max_flatline_steps": 377,
+      "max_flatline_duration_min": 62.8
+    },
+    "DHT_humidity": {
+      "min": 59.7,
+      "p01": 67.7,
+      "p25": 74.5,
+      "median": 77.6,
+      "mean": 77.13602424716466,
+      "p75": 79.7,
+      "p99": 82.9,
+      "max": 84.0,
+      "std": 3.7300443864118713,
+      "skewness": -0.7870476598782703,
+      "kurtosis": 0.8753519690719496,
+      "lag1_autocorr": 0.9988342787605662,
+      "unique_values": 376,
+      "max_flatline_steps": 23,
+      "max_flatline_duration_min": 3.8
+    },
+    "water_temp": {
+      "min": 18.0,
+      "p01": 18.07,
+      "p25": 19.8,
+      "median": 21.53,
+      "mean": 21.525739929605006,
+      "p75": 23.25,
+      "p99": 24.92,
+      "max": 25.0,
+      "std": 2.0059972487241073,
+      "skewness": -0.011459220081008133,
+      "kurtosis": -1.1772023189224183,
+      "lag1_autocorr": 0.037072538686877536,
+      "unique_values": 701,
+      "max_flatline_steps": 3,
+      "max_flatline_duration_min": 0.5
+    }
+  },
+  "forensics": {
+    "water_temp": {
+      "is_uniform_noise": true,
+      "ks_test_uniform_stat": 0.010684954466730179,
+      "ks_test_uniform_pvalue": 0.0057841252034960995,
+      "lag1_autocorr": 0.037072538686877536,
+      "mean_step_diff": 2.252215182447495,
+      "expected_uniform_mean": 21.5,
+      "empirical_mean": 21.525739929605006,
+      "verdict": "REJECT as input feature. water_temp is uncalibrated/synthetic uniform white noise with near-zero temporal memory."
+    },
+    "water_level": {
+      "value_counts": {
+        "2.0": 12895,
+        "1.0": 12672,
+        "1.75": 1,
+        "1.5": 1,
+        "1.25": 1
+      },
+      "is_discrete": true,
+      "percentage_at_1_or_2": 99.98826750097771,
+      "max_flatline_steps": 12895,
+      "verdict": "water_level is a 2-state discrete sensor (1.0 vs 2.0). Applying \u00b11.0 tolerance regression guarantees ~99% accuracy trivially."
+    }
+  },
+  "actuators": {
+    "pH_reducer": {
+      "OFF": 25570,
+      "ON": 0,
+      "ON_percentage": 0.0
+    },
+    "add_water": {
+      "OFF": 25465,
+      "ON": 105,
+      "ON_percentage": 0.411
+    },
+    "nutrients_adder": {
+      "OFF": 25444,
+      "ON": 126,
+      "ON_percentage": 0.493
+    },
+    "humidifier": {
+      "OFF": 25564,
+      "ON": 6,
+      "ON_percentage": 0.023
+    },
+    "ex_fan": {
+      "OFF": 25570,
+      "ON": 0,
+      "ON_percentage": 0.0
+    }
+  },
+  "is_default_flag": {
+    "0": 24692,
+    "1": 878,
+    "percentage_flagged": 3.43
+  },
+  "stress_analysis": {
+    "pH": {
+      "safe_range": [
+        5.5,
+        6.5
+      ],
+      "below_safe": 916,
+      "above_safe": 12,
+      "total_stress_steps": 928,
+      "stress_percentage": 3.63
+    },
+    "TDS": {
+      "safe_range": [
+        600,
+        1400
+      ],
+      "below_safe": 0,
+      "above_safe": 3521,
+      "total_stress_steps": 3521,
+      "stress_percentage": 13.77
+    },
+    "DHT_temp": {
+      "safe_range": [
+        18.0,
+        28.0
+      ],
+      "below_safe": 0,
+      "above_safe": 0,
+      "total_stress_steps": 0,
+      "stress_percentage": 0.0
+    },
+    "water_level": {
+      "safe_range": [
+        5.0,
+        30.0
+      ],
+      "below_safe": 25570,
+      "above_safe": 0,
+      "total_stress_steps": 25570,
+      "stress_percentage": 100.0
+    },
+    "DHT_humidity": {
+      "safe_range": [
+        50.0,
+        80.0
+      ],
+      "below_safe": 0,
+      "above_safe": 5445,
+      "total_stress_steps": 5445,
+      "stress_percentage": 21.29
+    },
+    "overall_environmental_stress": {
+      "total_stressed_steps": 9184,
+      "total_nominal_steps": 16386,
+      "stress_percentage": 35.92,
+      "class_imbalance_ratio": 1.78
+    }
+  },
+  "key_audit_conclusions": [
+    "Actual sampling interval is 10.0 seconds (not 1 minute). 15 steps lookback window corresponds to 150 seconds (2.5 minutes), not 15 minutes.",
+    "water_temp is confirmed to be synthetic/uncalibrated uniform random noise over [18, 25] with zero temporal autocorrelation (r=0.037) and zero cross-correlation. It must NOT be added as a model feature.",
+    "water_level is an almost-pure 2-state discrete sensor (1.0 vs 2.0). Applying a \u00b11.0 tolerance regression accuracy metric produces an artificially high (~99%) metric by construction.",
+    "Dataset contains 5 multi-hour shutdown gaps (largest: 24.72h and 22.02h). Slicing sliding-window sequences across these gaps injects severe non-physical boundary discontinuities (e.g. +1,095 ppm TDS step in row 4244).",
+    "Actuators (pumps, dosers) were only active during the initial hours of Day 1 (Dec 21, 2023) and remained completely OFF for the subsequent 4.5 days.",
+    "Overall environmental stress occurs in 35.92% of all telemetry steps, dominated by high humidity (21.29%) and hyper-fertilization TDS (13.77%)."
+  ]
+}

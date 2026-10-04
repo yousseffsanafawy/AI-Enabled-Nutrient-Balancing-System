@@ -56,7 +56,7 @@ def load_raw(
         ts_parsed = False
         # Try standard datetime string parsing
         try:
-            df[ts_col] = pd.to_datetime(df[ts_col], infer_datetime_format=True)
+            df[ts_col] = pd.to_datetime(df[ts_col])
             df = df.sort_values(ts_col).reset_index(drop=True)
             if verbose:
                 print(f"  Timestamp column detected: '{ts_col}'")
