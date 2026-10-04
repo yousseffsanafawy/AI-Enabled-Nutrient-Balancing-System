@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Hydroponic System</title>
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23198754' d='M512 64c0 113.6-84.6 207.5-194.2 222c-7.1-53.4-30.6-101.6-65.3-139.3C290.8 78.3 356.4 32 432 32c6.2 0 12.4 .3 18.5 .9C488.1 37.3 512 64 512 64zM358.3 311.3c20-4.9 40-7.3 60.1-7.3c23.7 0 47.4 3.4 70.6 10.3c.3 4.4 .4 8.8 .4 13.2c0 144.1-121.2 257.2-260.2 243c-33.3-3.4-65-14.6-92.7-31.9c-5.4-3.4-10.1-7.6-14.1-12.5C103.1 502 107.7 465.5 131.7 433.8c14.6-19.3 33.9-35.6 56.4-46.9c22.5-11.3 47.1-17.1 72.1-17.1c11.9 0 23.8 .6 35.6 1.9c43 4.7 82.7 20.3 115 44.4c1.1-14.4 1.7-28.9 1.7-43.5c0-21.2-1.3-42.1-3.8-62.7l-0.4 1.4z'/></svg>">
+
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* Premium Dark Theme Colors */
+    :root {
+      --bg-dark: #0a0e17;
+      --bg-gradient: radial-gradient(circle at top right, #131b2f 0%, #0a0e17 100%);
+      --glass-bg: rgba(20, 28, 47, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.05);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --color-optimal: #00ff88;
+      --color-warning: #ffb800;
+      --color-critical: #ff3366;
+      --color-info: #00e1ff;
+      --color-ai: #b052ff; 
+    }
+
+    body {
+      background: var(--bg-gradient);
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-main);
+      min-height: 100vh;
+      margin: 0;
+      padding-bottom: 50px;
+      overflow-x: hidden;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+
+    /* Glassmorphism Panels */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .glass-panel:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px);
+    }
+
+    /* Top Navigation */
+    .top-nav {
+      background: rgba(10, 14, 23, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      margin-bottom: 30px;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin: 0;
+      font-size: 1.5rem;
+      background: linear-gradient(to right, var(--color-optimal), var(--color-info));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Pulse Indicator */
+    .pulse-dot {
+      height: 10px;
+      width: 10px;
+      background-color: var(--color-optimal);
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+      box-shadow: 0 0 10px var(--color-optimal);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+    }
+
+    /* Sensor Cards with Hover Analysis */
+    .sensor-card {
+      padding: 24px;
+      text-align: center;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden; 
+      cursor: pointer;
+    }
+
+    .sensor-icon { font-size: 2.2rem; margin-bottom: 15px; filter: drop-shadow(0 0 8px currentColor); }
+    .sensor-title { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+    .sensor-value { font-size: 2.8rem; font-weight: 700; margin: 10px 0; font-variant-numeric: tabular-nums; }
+
+    /* The Hover Analysis Overlay */
+    .sensor-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 14, 23, 0.95);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      opacity: 0;
+      transform: translateY(100%);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+    }
+
+    .sensor-card:hover .sensor-overlay {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .overlay-icon { font-size: 1.5rem; margin-bottom: 8px; color: var(--color-info); }
+    .overlay-title { font-weight: 600; font-size: 0.9rem; color: white; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;}
+    .overlay-text { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* The Fixed Chart Container to prevent stretching */
+    .chart-wrapper {
+      position: relative;
+      height: 300px; 
+      width: 100%;
+    }
+
+    /* System Terminal */
+    .terminal-box {
+      background: #05080f;
+      border-radius: 16px;
+      padding: 15px;
+      height: 220px;
+      overflow-y: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      border: 1px solid #1e293b;
+    }
+    .log-entry { margin-bottom: 8px; border-bottom: 1px dashed #1e293b; padding-bottom: 4px;}
+    .log-time { color: var(--text-muted); margin-right: 10px; }
+    .log-msg.ai { color: var(--color-ai); }
+    .log-msg.sys { color: var(--color-optimal); }
+    .log-msg.warn { color: var(--color-warning); }
+
+    /* Animated AI Core */
+    .ai-glow {
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      background: linear-gradient(45deg, var(--color-ai), var(--color-info), var(--color-ai));
+      z-index: -1;
+      border-radius: 26px;
+      background-size: 400%;
+      animation: glowing 10s linear infinite;
+      opacity: 0.5;
+    }
+    @keyframes glowing { 0% { background-position: 0 0; } 50% { background-position: 400% 0; } 100% { background-position: 0 0; } }
+
+  </style>
+</head>
+<body>
+
+  <nav class="top-nav">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-3">
+        <h1 class="brand-title"><i class="fa-solid fa-leaf text-success"></i> Smart Hydroponic System </h1>
+      </div>
+      <div class="d-flex align-items-center gap-4">
+        <div class="text-end">
+          <div class="d-flex align-items-center text-sm mb-1">
+            <span class="pulse-dot"></span>
+            <span class="fw-bold text-light">System Online</span>
+          </div>
+          <div style="color: #cbd5e1; font-size: 0.8rem; font-weight: 500;">
+            Last Sync: <span id="timestamp" class="text-white">Waiting...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    
+    <div class="row g-3 mb-4">
+    </div>
+
+<div class="row g-4 mb-4 justify-content-center">
+      <div class="col-xl-3 col-lg-4 col-md-6">
+        <div class="glass-panel sensor-card">
+          <i class="fa-solid fa-flask sensor-icon" style="color: #b052ff;"></i>
+          <div class="sensor-title">pH Level</div>
+          <div class="sensor-value" style="color: #d8b4fe;"><span id="ph">--</span></div>
+          <div class="text-success fw-bold" style="font-size: 0.8rem;">Optimal</div>
+
+          <div class="sensor-overlay">
+            <i class="fa-solid fa-microscope overlay-icon"></i>
+            <div class="overlay-title">pH Analysis</div>
+            <div class="overlay-text">pH heavily dictates nutrient absorption. The current range is ideal for root uptake of macro-nutrients.</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-xl-3 col-lg-4 col-md-6">
+        <div class="glass-panel sensor-card">
+          <i class="fa-solid fa-water sensor-icon" style="color: var(--color-optimal);"></i>
+          <div class="sensor-title">Nutrients (TDS)</div>
+          <div class="sensor-value" style="color: #6ee7b7;">
+            <span id="tds">--</span><span style="font-size: 1.2rem; margin-left: 4px;">ppm</span>
+          </div>
+          <div class="text-warning fw-bold" style="font-size: 0.8rem;">Monitor</div>
+
+          <div class="sensor-overlay">
+            <i class="fa-solid fa-chart-simple overlay-icon"></i>
+            <div class="overlay-title">TDS Analysis</div>
+            <div class="overlay-text">TDS measures active nutrient density. A slight drop indicates active plant feeding.</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-xl-3 col-lg-4 col-md-6">
+        <div class="glass-panel sensor-card">
+          <i class="fa-solid fa-temperature-half sensor-icon" style="color: var(--color-warning);"></i>
+          <div class="sensor-title">Air Temp</div>
+          <div class="sensor-value" style="color: #fcd34d;">
+            <span id="temp">--</span><span style="font-size: 1.2rem; margin-left: 4px;">°C</span>
+          </div>
+          <div class="text-success fw-bold" style="font-size: 0.8rem;">Stable</div>
+
+          <div class="sensor-overlay">
+            <i class="fa-solid fa-sun overlay-icon"></i>
+            <div class="overlay-title">Air Temp Analysis</div>
+            <div class="overlay-text">Current ambient temperature is perfectly sustaining the stomatal function and maximizing the photosynthetic rate.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-lg-4 col-md-6">
+        <div class="glass-panel sensor-card">
+          <i class="fa-solid fa-temperature-low sensor-icon" style="color: var(--color-info);"></i>
+          <div class="sensor-title">Water Temp</div>
+          <div class="sensor-value" style="color: #93c5fd;">
+            <span id="water_temp">--</span><span style="font-size: 1.2rem; margin-left: 4px;">°C</span>
+          </div>
+          <div class="text-success fw-bold" style="font-size: 0.8rem;">Stable</div>
+
+          <div class="sensor-overlay">
+            <i class="fa-solid fa-snowflake overlay-icon"></i>
+            <div class="overlay-title">Water Temp Analysis</div>
+            <div class="overlay-text">Crucial for dissolved oxygen levels. Current temp is acceptable, preventing root rot pathogens.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mb-4 justify-content-center">
+      <div class="col-xl-4 col-md-6">
+        <div class="glass-panel sensor-card">
+          <i class="fa-solid fa-cloud-rain sensor-icon" style="color: #38bdf8;"></i>
+          <div class="sensor-title">Humidity</div>
+          <div class="sensor-value" style="color: #bae6fd;">
+            <span id="humidity">--</span><span style="font-size: 1.2rem; margin-left: 4px;">%</span>
+          </div>
+          <div class="text-success fw-bold" style="font-size: 0.8rem;">Optimal VPD</div>
+
+          <div class="sensor-overlay">
+            <i class="fa-solid fa-cloud-rain overlay-icon"></i>
+            <div class="overlay-title">Humidity Analysis</div>
+            <div class="overlay-text">Current humidity creates an ideal Vapor Pressure Deficit (VPD), ensuring healthy water and nutrient upward mobility.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-4 col-md-6">
+        <div class="glass-panel sensor-card">
+          <i class="fa-solid fa-ruler-vertical sensor-icon" style="color: #cbd5e1;"></i>
+          <div class="sensor-title">Water Level</div>
+          <div class="sensor-value" style="color: #f1f5f9;">
+            <span id="water_level">--</span><span style="font-size: 1.2rem; margin-left: 4px;">%</span>
+          </div>
+          <div class="text-warning fw-bold" style="font-size: 0.8rem;">Monitor Capacity</div>
+
+          <div class="sensor-overlay">
+            <i class="fa-solid fa-glass-water overlay-icon"></i>
+            <div class="overlay-title">Capacity Analysis</div>
+            <div class="overlay-text">Reservoir volume dictates concentration stability. Low water volume causes rapid nutrient concentration spikes.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-4 col-md-6">
+        <div class="glass-panel sensor-card">
+          <i class="fa-solid fa-sun sensor-icon" style="color: #fbbf24;"></i>
+          <div class="sensor-title">Light Intensity</div>
+          <div class="sensor-value" style="color: #fde68a;">
+            <span id="light">--</span><span style="font-size: 1.2rem; margin-left: 4px;">lux</span>
+          </div>
+          <div class="text-success fw-bold" style="font-size: 0.8rem;">Optimal</div>
+
+          <div class="sensor-overlay">
+            <i class="fa-solid fa-lightbulb overlay-icon"></i>
+            <div class="overlay-title">Light Analysis</div>
+            <div class="overlay-text">Proper light intensity drives photosynthesis, ensuring robust plant growth and maximum yield.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row g-4 mb-4">
+      
+      <div class="col-lg-6">
+        <div class="glass-panel p-4 h-100 position-relative">
+          <div class="ai-glow"></div>
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold m-0"><i class="fa-solid fa-brain" style="color: var(--color-ai);"></i> Neural Core</h5>
+            <span class="badge bg-dark border" style="border-color: var(--color-ai) !important; color: var(--color-ai);">Active</span>
+          </div>
+          
+          <div class="p-3 rounded mb-3" style="background: rgba(255, 51, 102, 0.1); border-left: 3px solid var(--color-critical);">
+            <h6 class="text-danger fw-bold mb-1"><i class="fa-solid fa-bolt"></i> Action Required</h6>
+            <p class="mb-0 text-light" style="font-size: 0.85rem;">TDS dropping. Recommend adding 15ml Solution A/B to prevent nutrient lockout.</p>
+          </div>
+
+          <div class="p-3 rounded" style="background: rgba(0, 225, 255, 0.1); border-left: 3px solid var(--color-info);">
+            <h6 class="text-info fw-bold mb-1"><i class="fa-solid fa-lightbulb"></i> AI Suggestion</h6>
+            <p class="mb-0 text-light" style="font-size: 0.85rem;">Increase exhaust fan speed by 15% in 2 hours to preempt expected humidity spike.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="glass-panel p-4 h-100">
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-terminal text-muted"></i> System Logs</h5>
+          <div class="terminal-box" id="terminalLog">
+            <div class="log-entry"><span class="log-time">[14:00:01]</span><span class="log-msg sys">System initialized. Sensors OK.</span></div>
+            <div class="log-entry"><span class="log-time">[14:02:15]</span><span class="log-msg sys">Firebase connection established.</span></div>
+            <div class="log-entry"><span class="log-time">[14:15:30]</span><span class="log-msg ai">Neural Net: Analyzed growth patterns.</span></div>
+            <div class="log-entry"><span class="log-time">[14:45:00]</span><span class="log-msg warn">Warning: Monitoring water level.</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <h5 class="fw-bold mb-3 mt-5"><i class="fa-solid fa-chart-line" style="color: var(--color-info);"></i> Historical Analytics</h5>
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="glass-panel p-4">
+          <h6 class="text-light fw-semibold mb-3" style="letter-spacing: 0.5px;">pH Stability Trend (Last 8 Hours)</h6>
+          <div class="chart-wrapper">
+            <canvas id="phChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="glass-panel p-4">
+          <h6 class="text-light fw-semibold mb-3" style="letter-spacing: 0.5px;">Nutrient Concentration (TDS)</h6>
+          <div class="chart-wrapper">
+            <canvas id="tdsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // --- Chart.js Global Config for Static Smooth Charts ---
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)';
+    Chart.defaults.font.family = "'Outfit', sans-serif";
+
+    // Common scales for aesthetic
+    const commonOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, beginAtZero: false },
+        x: { grid: { display: false } }
+      },
+      elements: {
+        point: { radius: 0, hoverRadius: 6, backgroundColor: '#0a0e17' }, 
+        line: { 
+          tension: 0.5, 
+          borderWidth: 3 
+        }
+      },
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      }
+    };
+
+    // Static pH Chart
+    const ctxPh = document.getElementById('phChart').getContext('2d');
+    let gradientPh = ctxPh.createLinearGradient(0, 0, 0, 300);
+    gradientPh.addColorStop(0, 'rgba(176, 82, 255, 0.3)'); 
+    gradientPh.addColorStop(1, 'rgba(176, 82, 255, 0.0)');
+
+    new Chart(ctxPh, {
+      type: 'line',
+      data: {
+        labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00'],
+        datasets: [{ 
+          label: 'pH Level', 
+          data: [5.8, 5.9, 6.1, 6.3, 6.2, 6.0, 6.1, 6.2, 6.2], 
+          borderColor: '#b052ff', 
+          backgroundColor: gradientPh,
+          fill: true
+        }]
+      },
+      options: commonOptions
+    });
+
+    // Static TDS Chart
+    const ctxTds = document.getElementById('tdsChart').getContext('2d');
+    let gradientTds = ctxTds.createLinearGradient(0, 0, 0, 300);
+    gradientTds.addColorStop(0, 'rgba(0, 255, 136, 0.3)'); 
+    gradientTds.addColorStop(1, 'rgba(0, 255, 136, 0.0)');
+
+    new Chart(ctxTds, {
+      type: 'line',
+      data: {
+        labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00'],
+        datasets: [{ 
+          label: 'TDS (ppm)', 
+          data: [950, 940, 920, 900, 890, 875, 870, 860, 850], 
+          borderColor: '#00ff88', 
+          backgroundColor: gradientTds,
+          fill: true
+        }]
+      },
+      options: commonOptions
+    });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+    const terminal = document.getElementById('terminalLog');
+    function logToTerminal(msg, type='sys') {
+      const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+      terminal.innerHTML += `<div class="log-entry"><span class="log-time">[${time}]</span><span class="log-msg ${type}">${msg}</span></div>`;
+      terminal.scrollTop = terminal.scrollHeight; // Auto-scroll
+    }
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBgQEsRK4YFcZymGNb_iwRx5te5ykW8zXM",
+      authDomain: "hydrosmart-pbl.firebaseapp.com",
+      databaseURL: "https://hydrosmart-pbl-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "hydrosmart-pbl",
+      storageBucket: "hydrosmart-pbl.firebasestorage.app",
+      messagingSenderId: "448849463448",
+      appId: "1:448849463448:web:0d771af0b3794c2af728ed"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const sensorsRef = ref(db, 'sensors');
+
+    let firstLoad = true;
+
+// Listen for live data to update ONLY the text cards and terminal
+    onValue(sensorsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        
+        // Update DOM Cards
+        if (data.ambient) {
+          if (data.ambient.temp !== undefined) document.getElementById("temp").innerText = data.ambient.temp;
+          if (data.ambient.humidity !== undefined) document.getElementById("humidity").innerText = data.ambient.humidity;
+        }
+        
+        if (data.water) {
+          if (data.water.tds !== undefined) document.getElementById("tds").innerText = data.water.tds;
+          if (data.water.temp !== undefined) document.getElementById("water_temp").innerText = data.water.temp;
+          // (water_level removed from here)
+        }
+
+        if (data.ph !== undefined) document.getElementById("ph").innerText = data.ph;
+        if (data.light !== undefined) document.getElementById("light").innerText = data.light;
+        
+        // FIXED: Pull water_level directly from the root of sensors data
+        if (data.water_level !== undefined) document.getElementById("water_level").innerText = data.water_level;
+        
+        const now = new Date();
+        document.getElementById("timestamp").innerText = now.toLocaleTimeString();
+
+        if(!firstLoad) {
+           logToTerminal("New sensor telemetry synced.", "sys");
+        }
+        firstLoad = false;
+      }
+    });
+  </script>
+
+</body>
+</html>

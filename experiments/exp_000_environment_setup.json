@@ -1,0 +1,24 @@
+{
+  "experiment_id": "exp_000_environment_setup",
+  "timestamp": "2026-10-05T01:00:00",
+  "sprint": "S0",
+  "dataset": "IoTData_25K_without_interpolation.csv",
+  "split_strategy": "N/A — environment setup sprint",
+  "window_size": 15,
+  "features": ["water_level", "DHT_temp", "TDS", "pH", "DHT_humidity"],
+  "model": "N/A",
+  "hyperparameters": {},
+  "random_seed": 42,
+  "metrics": {},
+  "notes": "Sprint 0 completed. Directory structure, config, preprocessing pipeline, evaluation module, baseline model module, and experiment logger created. Baseline artefacts preserved in baseline/. No training run yet.",
+  "sprint_checklist": {
+    "S0-T1_directory_structure": "DONE",
+    "S0-T2_requirements_txt": "DONE",
+    "S0-T3_pinned_versions": "DONE",
+    "S0-T4_experiment_logging": "DONE",
+    "S0-T5_random_seed_utility": "DONE",
+    "S0-T6_baseline_artefacts_preserved": "DONE",
+    "S0-T7_config_py": "DONE",
+    "S0-T8_reproducibility_checklist": "DONE"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "experiment_id": "exp_000b_data_discovery",
+  "timestamp": "2026-10-05T01:20:00",
+  "sprint": "S0",
+  "type": "discovery",
+  "dataset": "IoTData_25K_without_interpolation.csv",
+  "notes": "During Sprint 0 smoke test, data_loader revealed the dataset has 14 columns (not just 5). Additional columns beyond the 5 model features include: id, water_temp, and others. Key finding: water_temp (DS18B20) is present in the CSV but NOT used as a model input feature. The original model uses only 5 features: water_level, DHT_temp, TDS, pH, DHT_humidity. Sprint 1 EDA must document all 14 columns and decide whether water_temp should be added as a feature.",
+  "raw_observations": {
+    "total_rows": 25570,
+    "total_columns": 14,
+    "confirmed_5_model_features_missing_values": "0 for all 5 features",
+    "timestamp_column_present": true,
+    "timestamp_parseable_as_datetime": false,
+    "additional_columns_beyond_5_features": "Present (id, water_temp, and others - to be documented in Sprint 1)"
+  }
+}
