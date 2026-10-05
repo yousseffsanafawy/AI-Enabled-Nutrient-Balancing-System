@@ -1,0 +1,77 @@
+{
+  "experiment_id": "exp_001_chronological_split",
+  "description": "Rigorous chronological 70/10/20 split on CNN-BiLSTM with train-only scaling and boundary-aware sequencing",
+  "timestamp": "2026-10-05 02:01:28",
+  "protocol": {
+    "strategy": "chronological",
+    "train_ratio": 0.7,
+    "val_ratio": 0.1,
+    "test_ratio": 0.2,
+    "scaler_fitted_on": "train_partition_only",
+    "boundary_handling": "gaps_exceeding_60s_isolated",
+    "validation_data": "val_partition (test holdout touched once)"
+  },
+  "metrics": {
+    "water_level": {
+      "MAE": 0.038094,
+      "RMSE": 0.039989,
+      "R2": 0.0,
+      "MAPE": 3.8094,
+      "within_tolerance_pct": 100.0,
+      "tolerance_used": 1.0
+    },
+    "DHT_temp": {
+      "MAE": 0.215377,
+      "RMSE": 0.24014,
+      "R2": 0.815421,
+      "MAPE": 0.8703,
+      "within_tolerance_pct": 100.0,
+      "tolerance_used": 0.5
+    },
+    "TDS": {
+      "MAE": 41.304272,
+      "RMSE": 42.414086,
+      "R2": -0.219652,
+      "MAPE": 3.6271,
+      "within_tolerance_pct": 0.0197,
+      "tolerance_used": 20.0
+    },
+    "pH": {
+      "MAE": 0.044306,
+      "RMSE": 0.053625,
+      "R2": -0.225204,
+      "MAPE": 0.7891,
+      "within_tolerance_pct": 95.1191,
+      "tolerance_used": 0.1
+    },
+    "DHT_humidity": {
+      "MAE": 0.621448,
+      "RMSE": 0.863322,
+      "R2": 0.924232,
+      "MAPE": 0.8601,
+      "within_tolerance_pct": 95.5717,
+      "tolerance_used": 2.0
+    },
+    "aggregate": {
+      "mean_MAE": 8.444699,
+      "mean_RMSE": 8.722232,
+      "mean_R2": 0.258959,
+      "mean_within_tolerance_pct": 78.1421,
+      "mean_within_tolerance_no_tds": 97.6727
+    }
+  },
+  "tds_sensitivity": {
+    "\u00b110.0_ppm": 0.0,
+    "\u00b120.0_ppm": 0.02,
+    "\u00b130.0_ppm": 6.08,
+    "\u00b150.0_ppm": 98.92,
+    "\u00b175.0_ppm": 99.72,
+    "\u00b1100.0_ppm": 99.76
+  },
+  "training": {
+    "epochs_trained": 18,
+    "duration_sec": 106.94,
+    "final_train_loss": 0.003549,
+    "final_val_loss": 0.000333
+  }
+}

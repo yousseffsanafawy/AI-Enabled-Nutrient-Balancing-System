@@ -84,10 +84,15 @@ def compute_regression_metrics(
         }
 
     # Aggregate across all sensors
+    valid_tols = [results[n]["within_tolerance_pct"] for n in feature_names if results[n]["within_tolerance_pct"] is not None]
+    no_tds_tols = [results[n]["within_tolerance_pct"] for n in feature_names if n != "TDS" and results[n]["within_tolerance_pct"] is not None]
+
     results["aggregate"] = {
         "mean_MAE":  round(float(np.mean([results[n]["MAE"]  for n in feature_names])), 6),
         "mean_RMSE": round(float(np.mean([results[n]["RMSE"] for n in feature_names])), 6),
         "mean_R2":   round(float(np.mean([results[n]["R2"]   for n in feature_names])), 6),
+        "mean_within_tolerance_pct": round(float(np.mean(valid_tols)), 4) if valid_tols else None,
+        "mean_within_tolerance_no_tds": round(float(np.mean(no_tds_tols)), 4) if no_tds_tols else None,
     }
 
     if verbose:
@@ -96,23 +101,67 @@ def compute_regression_metrics(
     return results
 
 
+def evaluate_tds_sensitivity(
+    actual_tds: np.ndarray,
+    pred_tds: np.ndarray,
+    tolerances: list = [10.0, 20.0, 30.0, 50.0, 75.0, 100.0],
+    verbose: bool = True,
+) -> Dict[str, float]:
+    """Evaluate TDS accuracy across multiple tolerance thresholds."""
+    sensitivity = {}
+    if verbose:
+        print("  TDS Tolerance Sensitivity Analysis:")
+    for t in tolerances:
+        rate = float(np.mean(np.abs(actual_tds - pred_tds) <= t) * 100)
+        sensitivity[f"±{t:.1f}_ppm"] = round(rate, 2)
+        if verbose:
+            print(f"    ±{t:>5.1f} ppm -> Accuracy: {rate:>6.2f}%")
+    return sensitivity
+
+
+def format_comparison_table(comparison_data: dict) -> pd.DataFrame:
+    """
+    Format a multi-strategy comparison dictionary into a tidy pandas DataFrame.
+    """
+    rows = []
+    for strat, res in comparison_data.items():
+        row = {"Strategy": strat}
+        for sensor in ["pH", "TDS", "water_level", "DHT_temp", "DHT_humidity"]:
+            if sensor in res:
+                row[f"{sensor} MAE"] = res[sensor]["MAE"]
+                row[f"{sensor} R²"] = res[sensor]["R2"]
+                row[f"{sensor} Tol%"] = res[sensor]["within_tolerance_pct"]
+        if "aggregate" in res:
+            row["Avg MAE"] = res["aggregate"]["mean_MAE"]
+            row["Avg RMSE"] = res["aggregate"]["mean_RMSE"]
+            row["Avg R²"] = res["aggregate"]["mean_R2"]
+            row["Avg Tol%"] = res["aggregate"].get("mean_within_tolerance_pct")
+            row["Tol% (No TDS)"] = res["aggregate"].get("mean_within_tolerance_no_tds")
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
 def _print_regression_report(results: dict, feature_names: list) -> None:
     """Pretty-print regression metrics table."""
-    print("\n" + "=" * 75)
+    print("\n" + "=" * 80)
     print("  REGRESSION METRICS (real-world sensor units)")
-    print("=" * 75)
-    header = f"  {'Sensor':<18} {'MAE':>10} {'RMSE':>10} {'R²':>8} {'MAPE%':>8} {'Within-Tol%':>13}"
+    print("=" * 80)
+    header = f"  {'Sensor':<16} {'MAE':>10} {'RMSE':>10} {'R²':>8} {'MAPE%':>8} {'Within-Tol%':>13} {'Tol Used':>10}"
     print(header)
-    print("  " + "-" * 73)
+    print("  " + "-" * 78)
     for name in feature_names:
         r = results[name]
         mape_str = f"{r['MAPE']:>8.4f}" if r["MAPE"] is not None else "     N/A"
         tol_str  = f"{r['within_tolerance_pct']:>12.2f}%" if r["within_tolerance_pct"] is not None else "          N/A"
-        print(f"  {name:<18} {r['MAE']:>10.6f} {r['RMSE']:>10.6f} {r['R2']:>8.4f} {mape_str} {tol_str}")
-    print("  " + "-" * 73)
+        t_used   = f"±{r['tolerance_used']}" if r["tolerance_used"] is not None else "N/A"
+        print(f"  {name:<16} {r['MAE']:>10.6f} {r['RMSE']:>10.6f} {r['R2']:>8.4f} {mape_str} {tol_str} {t_used:>10}")
+    print("  " + "-" * 78)
     agg = results["aggregate"]
-    print(f"  {'AGGREGATE':<18} {agg['mean_MAE']:>10.6f} {agg['mean_RMSE']:>10.6f} {agg['mean_R2']:>8.4f}")
-    print("=" * 75 + "\n")
+    avg_tol = f"{agg['mean_within_tolerance_pct']:>12.2f}%" if agg.get('mean_within_tolerance_pct') is not None else "N/A"
+    print(f"  {'AGGREGATE':<16} {agg['mean_MAE']:>10.6f} {agg['mean_RMSE']:>10.6f} {agg['mean_R2']:>8.4f} {'':>8} {avg_tol}")
+    if agg.get('mean_within_tolerance_no_tds') is not None:
+        print(f"  {'AGG (NO TDS)':<16} {'':>10} {'':>10} {'':>8} {'':>8} {agg['mean_within_tolerance_no_tds']:>12.2f}%")
+    print("=" * 80 + "\n")
 
 
 # -----------------------------------------------------------------------------

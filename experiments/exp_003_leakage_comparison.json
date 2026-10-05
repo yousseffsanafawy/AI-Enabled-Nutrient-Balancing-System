@@ -1,0 +1,299 @@
+{
+  "experiment_id": "exp_003_leakage_comparison",
+  "description": "Empirical comparison of Random Split, Chronological Split, and Group/Session Split",
+  "timestamp": "2026-10-05 02:01:28",
+  "comparison_table": [
+    {
+      "Strategy": "Random (Leaked)",
+      "pH MAE": 0.032083,
+      "pH R\u00b2": 0.903001,
+      "pH Tol%": 97.8282,
+      "TDS MAE": 13.784527,
+      "TDS R\u00b2": 0.990081,
+      "TDS Tol%": 75.8756,
+      "water_level MAE": 0.009308,
+      "water_level R\u00b2": 0.999282,
+      "water_level Tol%": 100.0,
+      "DHT_temp MAE": 0.070449,
+      "DHT_temp R\u00b2": 0.967376,
+      "DHT_temp Tol%": 99.863,
+      "DHT_humidity MAE": 0.325878,
+      "DHT_humidity R\u00b2": 0.983048,
+      "DHT_humidity Tol%": 99.413,
+      "Avg MAE": 2.844449,
+      "Avg RMSE": 4.832123,
+      "Avg R\u00b2": 0.968558,
+      "Avg Tol%": 94.596,
+      "Tol% (No TDS)": 99.276
+    },
+    {
+      "Strategy": "Chronological (70/10/20)",
+      "pH MAE": 0.044306,
+      "pH R\u00b2": -0.225204,
+      "pH Tol%": 95.1191,
+      "TDS MAE": 41.304272,
+      "TDS R\u00b2": -0.219652,
+      "TDS Tol%": 0.0197,
+      "water_level MAE": 0.038094,
+      "water_level R\u00b2": 0.0,
+      "water_level Tol%": 100.0,
+      "DHT_temp MAE": 0.215377,
+      "DHT_temp R\u00b2": 0.815421,
+      "DHT_temp Tol%": 100.0,
+      "DHT_humidity MAE": 0.621448,
+      "DHT_humidity R\u00b2": 0.924232,
+      "DHT_humidity Tol%": 95.5717,
+      "Avg MAE": 8.444699,
+      "Avg RMSE": 8.722232,
+      "Avg R\u00b2": 0.258959,
+      "Avg Tol%": 78.1421,
+      "Tol% (No TDS)": 97.6727
+    },
+    {
+      "Strategy": "Group/Session (Holdout)",
+      "pH MAE": 0.082483,
+      "pH R\u00b2": -1.20153,
+      "pH Tol%": 61.8862,
+      "TDS MAE": 89.124867,
+      "TDS R\u00b2": 0.367485,
+      "TDS Tol%": 0.0,
+      "water_level MAE": 0.958354,
+      "water_level R\u00b2": 0.0,
+      "water_level Tol%": 100.0,
+      "DHT_temp MAE": 0.084635,
+      "DHT_temp R\u00b2": 0.95296,
+      "DHT_temp Tol%": 99.9917,
+      "DHT_humidity MAE": 1.459275,
+      "DHT_humidity R\u00b2": 0.719317,
+      "DHT_humidity Tol%": 84.4537,
+      "Avg MAE": 18.341923,
+      "Avg RMSE": 19.085696,
+      "Avg R\u00b2": 0.167646,
+      "Avg Tol%": 69.2663,
+      "Tol% (No TDS)": 86.5829
+    }
+  ],
+  "strategies": {
+    "random": {
+      "metrics": {
+        "water_level": {
+          "MAE": 0.009308,
+          "RMSE": 0.013394,
+          "R2": 0.999282,
+          "MAPE": 0.703,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 1.0
+        },
+        "DHT_temp": {
+          "MAE": 0.070449,
+          "RMSE": 0.128764,
+          "R2": 0.967376,
+          "MAPE": 0.2955,
+          "within_tolerance_pct": 99.863,
+          "tolerance_used": 0.5
+        },
+        "TDS": {
+          "MAE": 13.784527,
+          "RMSE": 23.479572,
+          "R2": 0.990081,
+          "MAPE": 1.412,
+          "within_tolerance_pct": 75.8756,
+          "tolerance_used": 20.0
+        },
+        "pH": {
+          "MAE": 0.032083,
+          "RMSE": 0.048947,
+          "R2": 0.903001,
+          "MAPE": 0.5637,
+          "within_tolerance_pct": 97.8282,
+          "tolerance_used": 0.1
+        },
+        "DHT_humidity": {
+          "MAE": 0.325878,
+          "RMSE": 0.48994,
+          "R2": 0.983048,
+          "MAPE": 0.4328,
+          "within_tolerance_pct": 99.413,
+          "tolerance_used": 2.0
+        },
+        "aggregate": {
+          "mean_MAE": 2.844449,
+          "mean_RMSE": 4.832123,
+          "mean_R2": 0.968558,
+          "mean_within_tolerance_pct": 94.596,
+          "mean_within_tolerance_no_tds": 99.276
+        }
+      },
+      "tds_sensitivity": {
+        "\u00b110.0_ppm": 51.83,
+        "\u00b120.0_ppm": 75.88,
+        "\u00b130.0_ppm": 89.98,
+        "\u00b150.0_ppm": 98.22,
+        "\u00b175.0_ppm": 99.47,
+        "\u00b1100.0_ppm": 99.59
+      },
+      "split_info": {
+        "n_rows_total": 25570,
+        "train_sequences": 17888,
+        "val_sequences": 2556,
+        "test_sequences": 5111,
+        "time_steps": 15
+      },
+      "epochs_trained": 19,
+      "duration_sec": 111.63,
+      "final_train_loss": 0.00325,
+      "final_val_loss": 0.000493
+    },
+    "chronological": {
+      "metrics": {
+        "water_level": {
+          "MAE": 0.038094,
+          "RMSE": 0.039989,
+          "R2": 0.0,
+          "MAPE": 3.8094,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 1.0
+        },
+        "DHT_temp": {
+          "MAE": 0.215377,
+          "RMSE": 0.24014,
+          "R2": 0.815421,
+          "MAPE": 0.8703,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 0.5
+        },
+        "TDS": {
+          "MAE": 41.304272,
+          "RMSE": 42.414086,
+          "R2": -0.219652,
+          "MAPE": 3.6271,
+          "within_tolerance_pct": 0.0197,
+          "tolerance_used": 20.0
+        },
+        "pH": {
+          "MAE": 0.044306,
+          "RMSE": 0.053625,
+          "R2": -0.225204,
+          "MAPE": 0.7891,
+          "within_tolerance_pct": 95.1191,
+          "tolerance_used": 0.1
+        },
+        "DHT_humidity": {
+          "MAE": 0.621448,
+          "RMSE": 0.863322,
+          "R2": 0.924232,
+          "MAPE": 0.8601,
+          "within_tolerance_pct": 95.5717,
+          "tolerance_used": 2.0
+        },
+        "aggregate": {
+          "mean_MAE": 8.444699,
+          "mean_RMSE": 8.722232,
+          "mean_R2": 0.258959,
+          "mean_within_tolerance_pct": 78.1421,
+          "mean_within_tolerance_no_tds": 97.6727
+        }
+      },
+      "tds_sensitivity": {
+        "\u00b110.0_ppm": 0.0,
+        "\u00b120.0_ppm": 0.02,
+        "\u00b130.0_ppm": 6.08,
+        "\u00b150.0_ppm": 98.92,
+        "\u00b175.0_ppm": 99.72,
+        "\u00b1100.0_ppm": 99.76
+      },
+      "split_info": {
+        "n_rows_total": 25570,
+        "train_rows": 17899,
+        "val_rows": 2557,
+        "test_rows": 5114,
+        "train_sequences": 17748,
+        "val_sequences": 2542,
+        "test_sequences": 5081,
+        "time_steps": 15
+      },
+      "epochs_trained": 18,
+      "duration_sec": 106.94,
+      "final_train_loss": 0.003549,
+      "final_val_loss": 0.000333
+    },
+    "group": {
+      "metrics": {
+        "water_level": {
+          "MAE": 0.958354,
+          "RMSE": 0.958368,
+          "R2": 0.0,
+          "MAPE": 95.8354,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 1.0
+        },
+        "DHT_temp": {
+          "MAE": 0.084635,
+          "RMSE": 0.121916,
+          "R2": 0.95296,
+          "MAPE": 0.3555,
+          "within_tolerance_pct": 99.9917,
+          "tolerance_used": 0.5
+        },
+        "TDS": {
+          "MAE": 89.124867,
+          "RMSE": 92.691917,
+          "R2": 0.367485,
+          "MAPE": 7.3026,
+          "within_tolerance_pct": 0.0,
+          "tolerance_used": 20.0
+        },
+        "pH": {
+          "MAE": 0.082483,
+          "RMSE": 0.094049,
+          "R2": -1.20153,
+          "MAPE": 1.4739,
+          "within_tolerance_pct": 61.8862,
+          "tolerance_used": 0.1
+        },
+        "DHT_humidity": {
+          "MAE": 1.459275,
+          "RMSE": 1.562228,
+          "R2": 0.719317,
+          "MAPE": 1.8998,
+          "within_tolerance_pct": 84.4537,
+          "tolerance_used": 2.0
+        },
+        "aggregate": {
+          "mean_MAE": 18.341923,
+          "mean_RMSE": 19.085696,
+          "mean_R2": 0.167646,
+          "mean_within_tolerance_pct": 69.2663,
+          "mean_within_tolerance_no_tds": 86.5829
+        }
+      },
+      "tds_sensitivity": {
+        "\u00b110.0_ppm": 0.0,
+        "\u00b120.0_ppm": 0.0,
+        "\u00b130.0_ppm": 0.0,
+        "\u00b150.0_ppm": 4.87,
+        "\u00b175.0_ppm": 36.68,
+        "\u00b1100.0_ppm": 59.35
+      },
+      "split_info": {
+        "n_rows_total": 25570,
+        "train_rows": 12885,
+        "val_rows": 585,
+        "test_rows": 12100,
+        "train_sequences": 12797,
+        "val_sequences": 569,
+        "test_sequences": 12035,
+        "time_steps": 15
+      },
+      "epochs_trained": 15,
+      "duration_sec": 65.2,
+      "final_train_loss": 0.002088,
+      "final_val_loss": 0.198371
+    }
+  },
+  "scientific_findings": {
+    "random_split_leakage": "Random splitting on time-series sequences causes massive autocorrelation leakage (14/15 timesteps overlap), yielding artificially inflated R\u00b2 (0.99+) and near-zero error.",
+    "chronological_split_rigor": "Chronological 70/10/20 with train-only scaling provides honest out-of-sample forecasting metrics, capturing natural system dynamics without lookahead contamination.",
+    "group_session_shift": "Session-level holdout exposes domain/regime shifts between physical experimental runs (such as reservoir refills and nutrient adjustments), demonstrating true out-of-session generalization."
+  }
+}
