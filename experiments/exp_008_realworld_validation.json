@@ -1,0 +1,307 @@
+{
+  "experiment_id": "exp_008_realworld_validation",
+  "description": "Real-world hardware telemetry validation, domain shift quantification, physical titration expansion, and embedded MCU feasibility",
+  "timestamp": "2026-10-05 23:39:37",
+  "hardware_telemetry": {
+    "source_file": "C:\\Users\\youse\\Downloads\\JackHom\\REPO\\AI-Enabled-Nutrient-Balancing-System\\data\\raw\\IoTData_Raw.csv",
+    "operational_period": "2023-11-26 to 2023-12-21",
+    "evaluated_sequences": 24452,
+    "median_sampling_seconds": 5.0,
+    "real_world_metrics": {
+      "water_level": {
+        "MAE": 0.091334,
+        "RMSE": 0.183635,
+        "R2": 0.554817,
+        "MAPE": 6.7932,
+        "within_tolerance_pct": 99.9305,
+        "tolerance_used": 1.0
+      },
+      "DHT_temp": {
+        "MAE": 0.58291,
+        "RMSE": 1.021855,
+        "R2": 0.176863,
+        "MAPE": 2.3085,
+        "within_tolerance_pct": 50.5439,
+        "tolerance_used": 0.5
+      },
+      "TDS": {
+        "MAE": 195.378829,
+        "RMSE": 247.159348,
+        "R2": -0.009331,
+        "MAPE": 22.291,
+        "within_tolerance_pct": 4.0569,
+        "tolerance_used": 20.0
+      },
+      "pH": {
+        "MAE": 0.69926,
+        "RMSE": 0.878961,
+        "R2": -0.996612,
+        "MAPE": 10.5424,
+        "within_tolerance_pct": 27.7155,
+        "tolerance_used": 0.1
+      },
+      "DHT_humidity": {
+        "MAE": 9.715136,
+        "RMSE": 37.245817,
+        "R2": -0.051201,
+        "MAPE": 14.6746,
+        "within_tolerance_pct": 2.1348,
+        "tolerance_used": 2.0
+      },
+      "aggregate": {
+        "mean_MAE": 41.293494,
+        "mean_RMSE": 57.297923,
+        "mean_R2": -0.065093,
+        "mean_within_tolerance_pct": 36.8763,
+        "mean_within_tolerance_no_tds": 45.0812
+      }
+    },
+    "kaggle_metrics": {
+      "water_level": {
+        "MAE": 0.033365,
+        "RMSE": 0.03582,
+        "R2": 0.0,
+        "MAPE": 3.3365,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 1.0
+      },
+      "DHT_temp": {
+        "MAE": 0.406749,
+        "RMSE": 0.47357,
+        "R2": 0.282168,
+        "MAPE": 1.6502,
+        "within_tolerance_pct": 62.5664,
+        "tolerance_used": 0.5
+      },
+      "TDS": {
+        "MAE": 131.652506,
+        "RMSE": 132.947325,
+        "R2": -10.983261,
+        "MAPE": 11.5727,
+        "within_tolerance_pct": 0.0,
+        "tolerance_used": 20.0
+      },
+      "pH": {
+        "MAE": 0.041579,
+        "RMSE": 0.051569,
+        "R2": -0.133058,
+        "MAPE": 0.7403,
+        "within_tolerance_pct": 95.0797,
+        "tolerance_used": 0.1
+      },
+      "DHT_humidity": {
+        "MAE": 2.454839,
+        "RMSE": 3.21179,
+        "R2": -0.048663,
+        "MAPE": 3.4061,
+        "within_tolerance_pct": 52.3125,
+        "tolerance_used": 2.0
+      },
+      "aggregate": {
+        "mean_MAE": 26.917808,
+        "mean_RMSE": 27.344015,
+        "mean_R2": -2.176563,
+        "mean_within_tolerance_pct": 61.9917,
+        "mean_within_tolerance_no_tds": 77.4896
+      }
+    }
+  },
+  "titration_benchmark": {
+    "num_trials": 10,
+    "mean_abs_error_pH": 0.4333,
+    "mean_rel_error_pH_pct": 6.88,
+    "original_paper_abs_error": 0.3,
+    "original_paper_rel_error_pct": 6.0,
+    "error_reduction_pct": -44.43,
+    "trials_summary": [
+      {
+        "Trial": 1,
+        "Intervention Type": "Acid Titration (HNO3)",
+        "Reagent": "0.1M HNO3 (1.5 mL)",
+        "Initial pH": 6.8,
+        "Target pH": 6.2,
+        "Pred pH": 5.703,
+        "Actual pH": 6.209,
+        "pH Abs Error": 0.506,
+        "pH Rel Error (%)": 8.15,
+        "Pred TDS": 796.9,
+        "Actual TDS": 634.5,
+        "TDS Error (ppm)": 162.4,
+        "Stress Prob": 0.026,
+        "Triage Action": "no_action",
+        "Safety Code": "HIGH_EPISTEMIC_UNCERTAINTY"
+      },
+      {
+        "Trial": 2,
+        "Intervention Type": "Acid Titration (HNO3)",
+        "Reagent": "0.1M HNO3 (2.0 mL)",
+        "Initial pH": 6.45,
+        "Target pH": 5.85,
+        "Pred pH": 5.62,
+        "Actual pH": 5.878,
+        "pH Abs Error": 0.258,
+        "pH Rel Error (%)": 4.39,
+        "Pred TDS": 785.2,
+        "Actual TDS": 653.1,
+        "TDS Error (ppm)": 132.1,
+        "Stress Prob": 0.048,
+        "Triage Action": "no_action",
+        "Safety Code": "HIGH_EPISTEMIC_UNCERTAINTY"
+      },
+      {
+        "Trial": 3,
+        "Intervention Type": "Acid Titration (HNO3)",
+        "Reagent": "0.1M HNO3 (2.5 mL)",
+        "Initial pH": 6.1,
+        "Target pH": 5.5,
+        "Pred pH": 5.505,
+        "Actual pH": 5.512,
+        "pH Abs Error": 0.007,
+        "pH Rel Error (%)": 0.12,
+        "Pred TDS": 822.3,
+        "Actual TDS": 675.1,
+        "TDS Error (ppm)": 147.2,
+        "Stress Prob": 0.568,
+        "Triage Action": "no_action",
+        "Safety Code": "HIGH_EPISTEMIC_UNCERTAINTY"
+      },
+      {
+        "Trial": 4,
+        "Intervention Type": "Acid Titration (HNO3)",
+        "Reagent": "0.1M HNO3 (3.0 mL)",
+        "Initial pH": 5.75,
+        "Target pH": 5.15,
+        "Pred pH": 5.401,
+        "Actual pH": 5.159,
+        "pH Abs Error": 0.241,
+        "pH Rel Error (%)": 4.67,
+        "Pred TDS": 757.5,
+        "Actual TDS": 698.6,
+        "TDS Error (ppm)": 58.8,
+        "Stress Prob": 0.974,
+        "Triage Action": "no_action",
+        "Safety Code": "HIGH_EPISTEMIC_UNCERTAINTY"
+      },
+      {
+        "Trial": 5,
+        "Intervention Type": "Base Titration (KOH)",
+        "Reagent": "0.1M KOH (1.5 mL)",
+        "Initial pH": 5.4,
+        "Target pH": 5.95,
+        "Pred pH": 5.539,
+        "Actual pH": 5.943,
+        "pH Abs Error": 0.403,
+        "pH Rel Error (%)": 6.79,
+        "Pred TDS": 839.6,
+        "Actual TDS": 670.0,
+        "TDS Error (ppm)": 169.6,
+        "Stress Prob": 0.365,
+        "Triage Action": "no_action",
+        "Safety Code": "HIGH_EPISTEMIC_UNCERTAINTY"
+      },
+      {
+        "Trial": 6,
+        "Intervention Type": "Base Titration (KOH)",
+        "Reagent": "0.1M KOH (2.0 mL)",
+        "Initial pH": 5.8,
+        "Target pH": 6.4,
+        "Pred pH": 5.626,
+        "Actual pH": 6.386,
+        "pH Abs Error": 0.761,
+        "pH Rel Error (%)": 11.91,
+        "Pred TDS": 782.8,
+        "Actual TDS": 655.9,
+        "TDS Error (ppm)": 127.0,
+        "Stress Prob": 0.038,
+        "Triage Action": "no_action",
+        "Safety Code": "HIGH_EPISTEMIC_UNCERTAINTY"
+      },
+      {
+        "Trial": 7,
+        "Intervention Type": "Base Titration (KOH)",
+        "Reagent": "0.1M KOH (2.5 mL)",
+        "Initial pH": 6.3,
+        "Target pH": 7.05,
+        "Pred pH": 5.712,
+        "Actual pH": 7.03,
+        "pH Abs Error": 1.318,
+        "pH Rel Error (%)": 18.75,
+        "Pred TDS": 881.5,
+        "Actual TDS": 641.1,
+        "TDS Error (ppm)": 240.4,
+        "Stress Prob": 0.026,
+        "Triage Action": "no_action",
+        "Safety Code": "HIGH_EPISTEMIC_UNCERTAINTY"
+      },
+      {
+        "Trial": 8,
+        "Intervention Type": "Nutrient Shock (A+B)",
+        "Reagent": "A+B Concentrate (10 mL)",
+        "Initial pH": 6.1,
+        "Target pH": 6.05,
+        "Pred pH": 5.714,
+        "Actual pH": 6.066,
+        "pH Abs Error": 0.352,
+        "pH Rel Error (%)": 5.81,
+        "Pred TDS": 767.1,
+        "Actual TDS": 647.0,
+        "TDS Error (ppm)": 120.1,
+        "Stress Prob": 0.044,
+        "Triage Action": "no_action",
+        "Safety Code": "HIGH_EPISTEMIC_UNCERTAINTY"
+      },
+      {
+        "Trial": 9,
+        "Intervention Type": "Nutrient Shock (A+B)",
+        "Reagent": "A+B Concentrate (15 mL)",
+        "Initial pH": 6.0,
+        "Target pH": 5.95,
+        "Pred pH": 5.694,
+        "Actual pH": 5.946,
+        "pH Abs Error": 0.253,
+        "pH Rel Error (%)": 4.25,
+        "Pred TDS": 840.0,
+        "Actual TDS": 794.4,
+        "TDS Error (ppm)": 45.7,
+        "Stress Prob": 0.079,
+        "Triage Action": "no_action",
+        "Safety Code": "HIGH_EPISTEMIC_UNCERTAINTY"
+      },
+      {
+        "Trial": 10,
+        "Intervention Type": "Nutrient Shock (A+B)",
+        "Reagent": "A+B Concentrate (20 mL)",
+        "Initial pH": 5.9,
+        "Target pH": 5.85,
+        "Pred pH": 5.622,
+        "Actual pH": 5.856,
+        "pH Abs Error": 0.234,
+        "pH Rel Error (%)": 3.99,
+        "Pred TDS": 1041.6,
+        "Actual TDS": 952.9,
+        "TDS Error (ppm)": 88.6,
+        "Stress Prob": 0.165,
+        "Triage Action": "auto_dose",
+        "Safety Code": "SAFE_AUTONOMOUS_DOSE"
+      }
+    ]
+  },
+  "embedded_feasibility": {
+    "fp32_model_size_kb": 319.29,
+    "int8_quantized_size_kb": 112.49,
+    "compression_ratio": 64.77,
+    "esp32_specs": {
+      "mcu": "ESP32-WROOM-32",
+      "cpu_clock_mhz": 240,
+      "cores": 2,
+      "total_sram_kb": 520,
+      "usable_heap_kb": 160,
+      "flash_mb": 4,
+      "fp32_model_kb": 319.3,
+      "int8_model_kb": 112.5,
+      "fits_in_flash": true,
+      "direct_sram_feasible": true,
+      "recommended_arch": "Edge-Gateway Hybrid (ESP32 RTOS telemetry + Raspberry Pi edge inference)"
+    }
+  }
+}

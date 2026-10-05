@@ -1,0 +1,11 @@
+Trial,Intervention Type,Reagent,Initial pH,Target pH,Pred pH,Actual pH,pH Abs Error,pH Rel Error (%),Pred TDS,Actual TDS,TDS Error (ppm),Stress Prob,Triage Action,Safety Code
+1,Acid Titration (HNO3),0.1M HNO3 (1.5 mL),6.8,6.2,5.703,6.209,0.506,8.15,796.9,634.5,162.4,0.026,no_action,HIGH_EPISTEMIC_UNCERTAINTY
+2,Acid Titration (HNO3),0.1M HNO3 (2.0 mL),6.45,5.85,5.62,5.878,0.258,4.39,785.2,653.1,132.1,0.048,no_action,HIGH_EPISTEMIC_UNCERTAINTY
+3,Acid Titration (HNO3),0.1M HNO3 (2.5 mL),6.1,5.5,5.505,5.512,0.007,0.12,822.3,675.1,147.2,0.568,no_action,HIGH_EPISTEMIC_UNCERTAINTY
+4,Acid Titration (HNO3),0.1M HNO3 (3.0 mL),5.75,5.15,5.401,5.159,0.241,4.67,757.5,698.6,58.8,0.974,no_action,HIGH_EPISTEMIC_UNCERTAINTY
+5,Base Titration (KOH),0.1M KOH (1.5 mL),5.4,5.95,5.539,5.943,0.403,6.79,839.6,670.0,169.6,0.365,no_action,HIGH_EPISTEMIC_UNCERTAINTY
+6,Base Titration (KOH),0.1M KOH (2.0 mL),5.8,6.4,5.626,6.386,0.761,11.91,782.8,655.9,127.0,0.038,no_action,HIGH_EPISTEMIC_UNCERTAINTY
+7,Base Titration (KOH),0.1M KOH (2.5 mL),6.3,7.05,5.712,7.03,1.318,18.75,881.5,641.1,240.4,0.026,no_action,HIGH_EPISTEMIC_UNCERTAINTY
+8,Nutrient Shock (A+B),A+B Concentrate (10 mL),6.1,6.05,5.714,6.066,0.352,5.81,767.1,647.0,120.1,0.044,no_action,HIGH_EPISTEMIC_UNCERTAINTY
+9,Nutrient Shock (A+B),A+B Concentrate (15 mL),6.0,5.95,5.694,5.946,0.253,4.25,840.0,794.4,45.7,0.079,no_action,HIGH_EPISTEMIC_UNCERTAINTY
+10,Nutrient Shock (A+B),A+B Concentrate (20 mL),5.9,5.85,5.622,5.856,0.234,3.99,1041.6,952.9,88.6,0.165,auto_dose,SAFE_AUTONOMOUS_DOSE

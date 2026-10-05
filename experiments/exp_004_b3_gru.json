@@ -1,0 +1,65 @@
+{
+  "experiment_id": "exp_004_b3_gru",
+  "model_name": "Gated Recurrent Unit",
+  "params": 15877,
+  "protocol": "chronological_70_10_20_boundary_aware",
+  "train_time_sec": 79.01,
+  "latency_ms": 169.253,
+  "metrics": {
+    "water_level": {
+      "MAE": 0.030306,
+      "RMSE": 0.037511,
+      "R2": 0.0,
+      "MAPE": 3.0306,
+      "within_tolerance_pct": 100.0,
+      "tolerance_used": 1.0
+    },
+    "DHT_temp": {
+      "MAE": 0.480745,
+      "RMSE": 0.542571,
+      "R2": 0.057748,
+      "MAPE": 1.9397,
+      "within_tolerance_pct": 47.3135,
+      "tolerance_used": 0.5
+    },
+    "TDS": {
+      "MAE": 73.716169,
+      "RMSE": 74.801474,
+      "R2": -2.793465,
+      "MAPE": 6.4656,
+      "within_tolerance_pct": 0.0,
+      "tolerance_used": 20.0
+    },
+    "pH": {
+      "MAE": 0.067712,
+      "RMSE": 0.082321,
+      "R2": -1.887258,
+      "MAPE": 1.197,
+      "within_tolerance_pct": 76.5794,
+      "tolerance_used": 0.1
+    },
+    "DHT_humidity": {
+      "MAE": 0.856487,
+      "RMSE": 0.935334,
+      "R2": 0.911065,
+      "MAPE": 1.1388,
+      "within_tolerance_pct": 100.0,
+      "tolerance_used": 2.0
+    },
+    "aggregate": {
+      "mean_MAE": 15.030284,
+      "mean_RMSE": 15.279842,
+      "mean_R2": -0.742382,
+      "mean_within_tolerance_pct": 64.7786,
+      "mean_within_tolerance_no_tds": 80.9732
+    }
+  },
+  "tds_sensitivity": {
+    "\u00b110.0_ppm": 0.0,
+    "\u00b120.0_ppm": 0.0,
+    "\u00b130.0_ppm": 0.0,
+    "\u00b150.0_ppm": 3.48,
+    "\u00b175.0_ppm": 43.55,
+    "\u00b1100.0_ppm": 99.92
+  }
+}
