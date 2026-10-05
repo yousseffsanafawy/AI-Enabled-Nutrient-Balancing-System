@@ -1,0 +1,312 @@
+{
+  "experiment_id": "exp_009_explainability",
+  "description": "Sprint 9: Permutation Feature Importance, Temporal Sensitivity, Integrated Gradients, and Agronomic Diagnostics",
+  "timestamp_utc": "2026-10-06T00:15:00Z",
+  "model_architecture": "MT-TCN-LSTM (Proposed)",
+  "sample_evaluation_size": 1500,
+  "permutation_feature_importance": {
+    "baseline_mse": 0.002800949164742334,
+    "baseline_per_sensor_mse": {
+      "water_level": 0.002073609758481724,
+      "DHT_temp": 0.0025992266624163822,
+      "TDS": 0.006705248419343401,
+      "pH": 0.0007843313719052814,
+      "DHT_humidity": 0.0018423296115649072
+    },
+    "baseline_stress_auc": 0.9990176626206038,
+    "feature_importance": {
+      "water_level": {
+        "mean_mse_increase": 0.0,
+        "std_mse_increase": 0.0,
+        "per_sensor_mse_increase": {
+          "water_level": 0.0,
+          "DHT_temp": 0.0,
+          "TDS": 0.0,
+          "pH": 0.0,
+          "DHT_humidity": 0.0
+        },
+        "stress_auc_drop": 0.0,
+        "normalized_importance": 0.0
+      },
+      "DHT_temp": {
+        "mean_mse_increase": 0.0004165607908542987,
+        "std_mse_increase": 1.460319888402483e-05,
+        "per_sensor_mse_increase": {
+          "water_level": 0.0,
+          "DHT_temp": 0.0034895254800969126,
+          "TDS": 0.0,
+          "pH": 2.2689719354746688e-05,
+          "DHT_humidity": 0.0
+        },
+        "stress_auc_drop": 0.001398615001556114,
+        "normalized_importance": 0.3993309783789856
+      },
+      "TDS": {
+        "mean_mse_increase": 0.00013830929987088966,
+        "std_mse_increase": 1.0124862118609158e-05,
+        "per_sensor_mse_increase": {
+          "water_level": 0.0,
+          "DHT_temp": 0.0005976086920895283,
+          "TDS": 0.00072992176424275,
+          "pH": 0.0,
+          "DHT_humidity": 0.0
+        },
+        "stress_auc_drop": 0.058739884842825996,
+        "normalized_importance": 0.13258854229435435
+      },
+      "pH": {
+        "mean_mse_increase": 1.05977861730072e-05,
+        "std_mse_increase": 3.1432018980363993e-06,
+        "per_sensor_mse_increase": {
+          "water_level": 2.7007682979214488e-05,
+          "DHT_temp": 1.4418206286346147e-05,
+          "TDS": 2.8640573960487387e-05,
+          "pH": 2.5196655783481345e-05,
+          "DHT_humidity": 0.0
+        },
+        "stress_auc_drop": 4.279489573606465e-05,
+        "normalized_importance": 0.01015943990417114
+      },
+      "DHT_humidity": {
+        "mean_mse_increase": 0.00047767881947195464,
+        "std_mse_increase": 4.2035911532041115e-06,
+        "per_sensor_mse_increase": {
+          "water_level": 0.0,
+          "DHT_temp": 0.0,
+          "TDS": 0.00016972168828961967,
+          "pH": 4.6057119561127445e-07,
+          "DHT_humidity": 0.002943645504269579
+        },
+        "stress_auc_drop": 0.0004765795206971513,
+        "normalized_importance": 0.45792103942248896
+      }
+    }
+  },
+  "temporal_sensitivity": {
+    "timestep_importance_raw": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.358704644825638e-05,
+      3.529703622428019e-05
+    ],
+    "timestep_importance_normalized": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.40056744331787536,
+      0.5994325566821247
+    ],
+    "temporal_saliency_heatmap": [
+      [
+        9.465762559557334e-06,
+        7.77659715822665e-06,
+        3.872411616612226e-05,
+        2.1740728698205203e-05,
+        4.556430212687701e-05
+      ],
+      [
+        1.3053866496193223e-05,
+        1.1763410839193966e-05,
+        4.5230081013869494e-05,
+        3.183866283507086e-05,
+        5.414348197518848e-05
+      ],
+      [
+        2.055384175037034e-05,
+        2.0097575543331914e-05,
+        4.344053741078824e-05,
+        3.6972531233914196e-05,
+        5.023991980124265e-05
+      ],
+      [
+        2.021854197664652e-05,
+        2.212717845395673e-05,
+        5.404573312262073e-05,
+        4.519856156548485e-05,
+        5.71288910578005e-05
+      ],
+      [
+        3.60730045940727e-05,
+        2.595646037661936e-05,
+        6.690245936624706e-05,
+        4.8502563004149124e-05,
+        6.259434303501621e-05
+      ],
+      [
+        4.698883640230633e-05,
+        3.5835862945532426e-05,
+        8.238572627305984e-05,
+        5.563467857427895e-05,
+        6.834857776993886e-05
+      ],
+      [
+        5.7705114159034565e-05,
+        3.9892573113320395e-05,
+        8.22950096335262e-05,
+        6.320187821984291e-05,
+        8.729165710974485e-05
+      ],
+      [
+        5.2327617595437914e-05,
+        4.0645642002345994e-05,
+        8.14940722193569e-05,
+        6.039657091605477e-05,
+        9.509117080597207e-05
+      ],
+      [
+        5.847055581398308e-05,
+        4.9408990889787674e-05,
+        8.822597737889737e-05,
+        6.676055636489764e-05,
+        0.00011225996422581375
+      ],
+      [
+        6.570130790350959e-05,
+        6.654779281234369e-05,
+        0.00010045332601293921,
+        7.803702465025708e-05,
+        0.00012731710739899427
+      ],
+      [
+        7.875740266172215e-05,
+        9.118296293308958e-05,
+        0.00011138161062262952,
+        9.302122634835541e-05,
+        0.0001475024182582274
+      ],
+      [
+        6.529737584060058e-05,
+        9.89922700682655e-05,
+        8.156975673045963e-05,
+        0.00010530448344070464,
+        0.00013052267604507506
+      ],
+      [
+        7.009618275333196e-05,
+        0.0001042213843902573,
+        7.882097997935489e-05,
+        9.432838123757392e-05,
+        0.00014191216905601323
+      ],
+      [
+        6.03394400968682e-05,
+        0.00010874850704567507,
+        5.6794044212438166e-05,
+        5.9942150983260944e-05,
+        0.00013954985479358584
+      ],
+      [
+        6.994910654611886e-05,
+        0.00012254825560376048,
+        5.196603524382226e-05,
+        6.783383287256584e-05,
+        0.00018678228661883622
+      ]
+    ],
+    "timesteps_seconds_lag": [
+      -140,
+      -130,
+      -120,
+      -110,
+      -100,
+      -90,
+      -80,
+      -70,
+      -60,
+      -50,
+      -40,
+      -30,
+      -20,
+      -10,
+      0
+    ]
+  },
+  "case_studies": [
+    {
+      "case_name": "Normal Chemical Equilibrium",
+      "target_sensor": "pH",
+      "current_value": 5.64,
+      "predicted_value": 5.657896518707275,
+      "delta": 0.01789651870727571,
+      "risk_level": "LOW",
+      "stress_probability": 0.0327635183930397,
+      "top_driver": "DHT_humidity",
+      "top_driver_share": 0.4513993561267853,
+      "secondary_driver": "DHT_temp",
+      "secondary_driver_share": 0.2860538363456726,
+      "temporal_recent_share": 0.30460596084594727,
+      "recommended_action": "Maintain current standby equilibrium; no chemical intervention required."
+    },
+    {
+      "case_name": "Rapid Acidification Event",
+      "target_sensor": "pH",
+      "current_value": 5.72,
+      "predicted_value": 5.676999092102051,
+      "delta": -0.04300090789794897,
+      "risk_level": "LOW",
+      "stress_probability": 0.04547351226210594,
+      "top_driver": "DHT_humidity",
+      "top_driver_share": 0.42626702785491943,
+      "secondary_driver": "DHT_temp",
+      "secondary_driver_share": 0.3014336824417114,
+      "temporal_recent_share": 0.29029449820518494,
+      "recommended_action": "Maintain current standby equilibrium; no chemical intervention required."
+    },
+    {
+      "case_name": "Salinity Surge (High TDS)",
+      "target_sensor": "TDS",
+      "current_value": 1460.99,
+      "predicted_value": 1395.37158203125,
+      "delta": -65.61841796875001,
+      "risk_level": "HIGH (STRESS DETECTED)",
+      "stress_probability": 0.9101144671440125,
+      "top_driver": "DHT_humidity",
+      "top_driver_share": 0.44528284668922424,
+      "secondary_driver": "TDS",
+      "secondary_driver_share": 0.3308294713497162,
+      "temporal_recent_share": 0.43216437101364136,
+      "recommended_action": "Schedule automated A+B concentrate replenishment (5 - 10 mL)."
+    },
+    {
+      "case_name": "Multi-Sensor Stress Alarm",
+      "target_sensor": "pH",
+      "current_value": 5.6,
+      "predicted_value": 5.620650768280029,
+      "delta": 0.020650768280029652,
+      "risk_level": "HIGH (STRESS DETECTED)",
+      "stress_probability": 0.8713622093200684,
+      "top_driver": "DHT_temp",
+      "top_driver_share": 0.31025001406669617,
+      "secondary_driver": "DHT_humidity",
+      "secondary_driver_share": 0.29101526737213135,
+      "temporal_recent_share": 0.2935657799243927,
+      "recommended_action": "Maintain current standby equilibrium; no chemical intervention required."
+    }
+  ],
+  "generated_figures": [
+    "reports/figures/fig27_permutation_feature_importance.png",
+    "reports/figures/fig28_temporal_sensitivity_heatmap.png",
+    "reports/figures/fig29_agronomic_case_studies.png"
+  ]
+}

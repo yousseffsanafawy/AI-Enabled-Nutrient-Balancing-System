@@ -5,7 +5,7 @@ Every experiment that produces a reported result **must** complete this checklis
 
 ---
 
-## ✅ Per-Experiment Items (Sprint 3, 4, 5, 6, 7, 8 Verified: `exp_001`, `exp_003`, `exp_004`, `exp_005`, `exp_006`, `exp_007`, `exp_008`)
+## ✅ Per-Experiment Items (Sprint 3, 4, 5, 6, 7, 8, 9 Verified: `exp_001`, `exp_003`, `exp_004`, `exp_005`, `exp_006`, `exp_007`, `exp_008`, `exp_009`)
 
 ### Data
 - [x] Dataset filename and version recorded (`IoTData_25K_without_interpolation.csv` and `IoTData_Raw.csv`)
@@ -58,11 +58,13 @@ Every experiment that produces a reported result **must** complete this checklis
 - [x] `experiments/exp_006_ablation_master.json` saved
 - [x] `experiments/exp_007_uncertainty_safety.json` saved
 - [x] `experiments/exp_008_realworld_validation.json` saved
-- [x] Comparative visualizations saved: `fig09` to `fig26` in `reports/figures/`
+- [x] `experiments/exp_009_explainability.json` saved
+- [x] Comparative visualizations saved: `fig09` to `fig29` in `reports/figures/`
 - [x] Benchmark table published & updated: `reports/benchmark_table.md`
 - [x] Master ablation table published: `reports/ablation_table.md`
 - [x] Safety layer evaluation published: `reports/safety_evaluation.md`
 - [x] Real-world validation report published: `reports/realworld_validation_report.md`
+- [x] Explainability & sensitivity report published: `reports/explainability_report.md`
 
 ---
 
