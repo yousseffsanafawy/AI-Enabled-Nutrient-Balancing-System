@@ -43,10 +43,10 @@ Our contributions are direct and reproducible:
 
 ---
 
-### II. Dataset Realities & Evaluation Protocol
+### II. Dataset Provenance, Physical Realities & Leakage Forensics
 
-#### A. Dataset Characteristics and Forensic Anomalies
-We audited 25,570 raw rows collected between December 21 and December 26, 2023 (`IoTData_25K_without_interpolation.csv`). Timestamps increment strictly by 10 seconds. Timestamp differencing revealed 17 sampling gaps exceeding 60 seconds, including 5 major system shutdowns lasting between 1.06 and 24.72 hours. These shutdowns split the telemetry into 6 distinct operational sessions.
+#### A. Telemetry Acquisition & Physical Sampling Audit
+We audited 25,570 raw rows collected between December 21 and December 26, 2023 (`IoTData_25K_without_interpolation.csv`) from an operational Nutrient Film Technique (NFT) hydroponic facility. Timestamps increment strictly by 10 seconds. Timestamp differencing revealed 17 sampling gaps exceeding 60 seconds, including 5 major system shutdowns lasting between 1.06 and 24.72 hours. These shutdowns partition the telemetry into 6 distinct operational sessions.
 
 Two critical sensor anomalies emerged during exploratory data analysis:
 1. **`water_temp` is Synthetic White Noise:** Reported water temperature fluctuates between 18.0°C and 25.0°C with a uniform distribution $\mathcal{U}[18, 25]$ and a lag-1 autocorrelation of $r = 0.037$. It shares zero physical cross-correlation with ambient air temperature ($r = -0.008$) or humidity ($r = 0.005$). Firmware inspection confirmed this was an uncalibrated default fallback emitted when an analog probe disconnected. We dropped it from training entirely.
@@ -78,7 +78,7 @@ To prevent data contamination, we implemented a strict pipeline:
 
 ---
 
-### III. Proposed Methodology: MT-TCN-LSTM & Safety Layer
+### III. Proposed AI Architecture & Closed-Loop Safety
 
 ```
                         PROPOSED SYSTEM ARCHITECTURE
@@ -134,14 +134,18 @@ To prevent data contamination, we implemented a strict pipeline:
 #### A. Shared Spatiotemporal Feature Extractor
 Hydraulic nutrient delivery exhibits two distinct physical behaviors: rapid localized mixing turbulence (0–30 seconds) and slow bulk chemical dissolution (30–150 seconds). Standard CNNs miss the long tail, while standard RNNs suffer vanishing gradients over noisy high-frequency steps.
 
-We address this with a hybrid front-end:
-1. **Multi-Scale Causal Dilated Convolutions:** Two residual blocks with dilation factors $d=1$ and $d=2$. Causal padding maintains temporal causality ($t$ depends only on past timesteps $\le t$). Dilation expands the receptive field across the full 150 seconds without increasing parameter count or using pooling layers that destroy temporal resolution.
+We address this with a hybrid front-end combining Causal Dilated Convolutions and Recurrent Sequence Aggregation:
+1. **Multi-Scale Causal Dilated Convolutions:** Two residual blocks with dilation factors $d=1$ and $d=2$, kernel size $k=3$, and 64 filters. The receptive field formula for dilated causal convolution is:
+$$R = 1 + \sum_{l=1}^L (k_l - 1) \cdot d_l$$
+For $L=2, k=3, d_1=1, d_2=2$, $R = 1 + 2(1) + 2(2) = 7$ steps. Causal padding maintains temporal causality ($t$ depends only on past timesteps $\le t$). Dilation expands the receptive field across the full 150 seconds without increasing parameter count or using pooling layers that destroy temporal resolution.
 2. **Recurrent Aggregator:** A 64-unit unidirectional LSTM layer aggregates the filtered feature representations, tracking slow monotonic ion absorption trends.
 
 #### B. Multi-Task Learning Objective
 Rather than training independent models, we use a shared representation with two specialized output heads:
-* **Forecasting Head (Regression):** Predicts continuous values for all 5 sensors at $t+10$s using Mean Squared Error ($\mathcal{L}_{\text{forecast}}$).
-* **Stress Classification Head:** Predicts whether the system will breach biological tolerance deadbands within the lookback window using Binary Cross-Entropy ($\mathcal{L}_{\text{stress}}$).
+* **Forecasting Head (Regression):** Predicts continuous values for all 5 sensors at $t+10$s using Mean Squared Error ($\mathcal{L}_{\text{forecast}}$):
+$$\mathcal{L}_{\text{forecast}} = \frac{1}{M}\sum_{m=1}^M \left(\hat{y}_m - y_m\right)^2$$
+* **Stress Classification Head:** Predicts whether the system will breach biological tolerance deadbands within the lookback window using Binary Cross-Entropy ($\mathcal{L}_{\text{stress}}$):
+$$\mathcal{L}_{\text{stress}} = - \left[ s \log \hat{s} + (1 - s) \log (1 - \hat{s}) \right]$$
 
 The joint loss function balances both objectives:
 $$\mathcal{L}_{\text{total}} = (1 - \lambda)\mathcal{L}_{\text{forecast}} + \lambda\mathcal{L}_{\text{stress}}, \quad \text{where } \lambda = 0.2$$
@@ -158,15 +162,18 @@ Here, $\sigma_y$ serves as an explicit measure of epistemic (model) uncertainty.
 
 #### D. Five-Tier Closed-Loop Safety Layer
 Neural networks must never directly drive peristaltic pumps without hardware-level safety checks. We implemented a 5-tier safety decision engine in `src/safety_layer.py`:
-* **Tier 1 (Sensor Integrity):** Checks for probe disconnects ($\le 0.0$), unphysical spikes ($|\Delta \text{pH}| > 1.5$ per step), and frozen ADC flatlines ($\Delta = 0$ over 5 consecutive steps). Any fault forces an immediate `STANDBY` mode.
-* **Tier 2 (Agronomic Feasibility):** Restricts operation to biological limits (pH 5.0–7.5, TDS 300–1800 ppm, temperature 15–30°C).
+* **Tier 1 (Sensor Integrity):** Checks for probe disconnects ($\le 0.0$), unphysical spikes ($|\Delta \text{pH}| > 1.5$ per step), and frozen ADC flatlines ($\Delta = 0$ over 5 consecutive steps). Any fault forces an immediate `STANDBY` mode:
+$$y \le 0.0 \lor |\Delta y| > \theta_{\text{spike}} \lor \sum_{t=1}^5 |\Delta y_t| = 0 \implies \text{STANDBY}$$
+* **Tier 2 (Agronomic Feasibility):** Restricts operation to biological limits (pH 5.0–7.5, TDS 300–1800 ppm, temperature 15–30°C). Violations trigger `EMERGENCY_HOLD`.
 * **Tier 3 (Uncertainty Gating):** If predictive standard deviation $\sigma > P_{95}$, automated dosing is suppressed (`STANDBY`). If $P_{75} < \sigma \le P_{95}$, the system flags `ALERT_HUMAN` for manual confirmation.
-* **Tier 4 (Hardware Actuator Clamps):** Enforces a strict hardware limit: maximum single-cycle dose $\le 5.0$ mL for acid/base and $\le 25.0$ mL for nutrients, accompanied by a mandatory 60-second chemical mixing lockout.
+* **Tier 4 (Hardware Actuator Clamps):** Enforces strict hardware volume limits:
+$$V_{\text{dose}} = \min(V_{\text{calc}}, V_{\max})$$
+Where $V_{\max} \le 5.0$ mL for acid/base and $\le 25.0$ mL for nutrients, accompanied by a mandatory 60-second chemical mixing lockout.
 * **Tier 5 (Stateful Action Resolver):** Emits deterministic operational directives: `STANDBY`, `AUTO_DOSE`, `ALERT_HUMAN`, or `EMERGENCY_HOLD`.
 
 ---
 
-### IV. Experimental Evaluation & Benchmark Analysis
+### IV. Experimental Results & Benchmark Analysis
 
 We trained all models on an identical chronological partition (17,748 train sequences, 2,542 validation sequences, 5,081 test sequences) using Adam ($\text{lr} = 10^{-4}$), batch size 32, and early stopping on validation loss (patience = 8).
 
@@ -194,7 +201,7 @@ TABLE II: BENCHMARK RESULTS UNDER CHRONOLOGICAL EVALUATION
 3. **Stress Detection:** The classification head achieves **100.0% Recall** on biological stress events with an F1-score of 0.9404 and a ROC-AUC of 0.9995. Across the entire held-out test partition, every single stress event was flagged ahead of time.
 
 #### B. Systematic Ablation Study
-To confirm that each architectural component contributes directly to performance, we trained 11 ablation variants:
+To confirm that each architectural component contributes directly to performance, we trained 11 ablation variants under identical chronological conditions:
 
 ```
 TABLE III: SYSTEMATIC ARCHITECTURAL ABLATION RESULTS
@@ -218,7 +225,7 @@ The ablations reveal clear physical patterns:
 
 ---
 
-### V. Physical Titration Validation & Embedded Feasibility
+### V. Discussion, Physical Validation & Embedded Deployment
 
 #### A. Replicated Chemical Titration Experiments ($N=10$)
 The original handoff study documented only 2 manual trials with nitric acid. We expanded physical validation to **10 systematic titration trials** covering acid dosing (0.1M $\text{HNO}_3$), base dosing (0.1M $\text{KOH}$), and concentrated nutrient salt shocks (A+B formula).
@@ -243,25 +250,23 @@ TABLE IV: REPLICATED CHEMICAL TITRATION EXPERIMENTS (N=10)
 
 Across all 10 trials, the proposed model achieved a mean absolute error of **0.433 pH**, cutting physical error variance by **44.4%** compared to the original baseline.
 
-#### B. Embedded MCU Feasibility & Hardware Realities
+#### B. Embedded MCU Feasibility & Hardware Bottlenecks
 We evaluated whether MT-TCN-LSTM can run on-chip on an **ESP32-WROOM-32** (240 MHz Tensilica Xtensa LX6, 520 KB SRAM, 4 MB Flash):
 * **Quantization:** Converting the FP32 model (319.3 KB) using INT8 dynamic range quantization shrank the file to **112.5 KB**: a **64.8% reduction**.
 * **Memory Constraints:** While the 112.5 KB binary easily fits in 4 MB Flash, available runtime SRAM is heavily restricted. After loading FreeRTOS, the lwIP TCP/IP stack, and TLS certificates, usable heap drops to ~160 KB. LSTM recurrent dynamic array allocation (`TensorArrayV2`) requires TensorFlow Lite Micro Select TF ops, which push memory dangerously close to allocation panics.
-* **Architectural Blueprint:** We conclude that deploying recurrent neural networks directly inside ESP32 heap memory is an anti-pattern. Instead, we implement an **Edge-Gateway Hybrid architecture**:
+* **Architectural Blueprint:** Deploying recurrent neural networks directly inside ESP32 heap memory is an anti-pattern. Instead, we implement an **Edge-Gateway Hybrid architecture**:
   1. The ESP32 handles hard real-time 10-second ADC polling, sensor de-noising, and relay pulse-width modulation.
   2. A local edge gateway (Raspberry Pi 4 or Jetson Nano) hosts the quantized TFLite model, executing inference, MC Dropout, and safety triage in **71.69 ms** over local MQTT.
   3. If gateway communication drops for more than 30 seconds, the ESP32 falls back to hardcoded hardware deadbands.
 
----
-
-### VI. Interpretability & Conclusion
-
-#### A. Agronomic Feature Attribution
+#### C. Agronomic Feature Attribution & Physical Insights
 Using Permutation Feature Importance and Integrated Gradients, we evaluated which sensor modalities drive predictions:
 * **Continuous Forecasting:** Ambient environmental modalities account for **85.7% of predictive variance** (Humidity 45.79%, Temperature 39.93%). This aligns with plant biology: vapor pressure deficit governs plant transpiration, which drives the evaporative concentration of salts.
 * **Stress Classification:** Permuting **TDS** causes the largest drop in Stress ROC-AUC (**0.0587 points**), confirming that the stress detector relies on chemical thresholds rather than ambient noise.
 
-#### B. Conclusion
+---
+
+### VI. Conclusion
 High reported accuracies in IoT agricultural time series frequently reflect sequence leakage and temporal autocorrelation rather than physical modeling. When held to an honest chronological benchmark, prior baseline models fail on nutrient regulation.
 
 By uniting causal dilated convolutions with multi-task stress learning and calibrated epistemic uncertainty gating, MT-TCN-LSTM delivers reliable nutrient forecasting, 100% stress recall, and complete hazard prevention. Deployed in an Edge-Gateway hybrid architecture at 112.5 KB, it establishes a dependable, physically grounded baseline for autonomous hydroponic cultivation.
