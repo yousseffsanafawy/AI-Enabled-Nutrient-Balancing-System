@@ -49,13 +49,14 @@ def build_cnn_bilstm(
         Compiled Keras Sequential model.
     """
     model = Sequential(name="CNN_BiLSTM_Baseline")
+    model.add(tf.keras.layers.Input(shape=(time_steps, n_features)))
 
     # Local temporal pattern extraction
     model.add(Conv1D(
         filters=cnn_filters,
         kernel_size=kernel_size,
         activation="relu",
-        input_shape=(time_steps, n_features),
+        padding="same",
         name="conv1d",
     ))
 

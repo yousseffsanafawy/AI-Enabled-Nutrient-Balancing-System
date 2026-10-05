@@ -1,4 +1,5 @@
 # Project Progress Summary: Sprints 1 to 3
+
 **AI-Enabled Smart Hydroponic Nutrient Balancing System**  
 *Document Version: 1.0 | Date: October 2026 | Status: Complete & Verified*
 
@@ -11,7 +12,7 @@ This report provides a concise, high-level review of all work completed to date 
 ### Quick Status Dashboard
 
 | Sprint | Phase Name | Status | Key Deliverable | Primary Outcome |
-|---|---|:---:|---|---|
+| --- | --- | :---: | --- | --- |
 | **Sprint 1** | EDA & Forensic Audit | ✅ Done | [`reports/audit_report.md`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/reports/audit_report.md) | Discovered 10s sampling interval; uncovered 5 major shutdowns; debunked `water_temp` (noise) and `water_level` (discrete state). |
 | **Sprint 2** | Baseline Exact Reproduction | ✅ Done | [`notebooks/02_reproduction_script.py`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/notebooks/02_reproduction_script.py) | Faithfully reproduced CNN-BiLSTM baseline; confirmed 3 methodological leakage points; reconciled original "96% accuracy". |
 | **Sprint 3** | Leakage Audit & Rigorous Splitting | ✅ Done | [`reports/evaluation_protocol.md`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/reports/evaluation_protocol.md) | Built boundary-aware pipeline; eliminated 154 corrupt sequences; proved Random Split inflation vs honest Chronological 70/10/20. |
@@ -20,7 +21,8 @@ This report provides a concise, high-level review of all work completed to date 
 
 ## 🔍 Sprint 1: Forensic Dataset Audit & Exploratory Data Analysis
 
-### What Was Done:
+### What Was Done
+
 1. **Dataset Discovery & Inventory:**
    - Audited all 6 raw CSV files; identified the canonical ground truth: `IoTData_25K_without_interpolation.csv` (25,570 rows × 14 columns, covering Dec 21–26, 2023).
 2. **True Timebase Discovery:**
@@ -35,7 +37,8 @@ This report provides a concise, high-level review of all work completed to date 
 5. **Reconciling the "96.22% Accuracy" Metric:**
    - Proved that "accuracy" was actually a **within-tolerance regression rate**, averaging four high-tolerance sensors with a low-performing TDS sensor.
 
-### Key Deliverables:
+### Key Deliverables
+
 - Comprehensive report: [`reports/audit_report.md`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/reports/audit_report.md)
 - Audit figures: `fig01` to `fig06` in [`reports/figures/`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/reports/figures/)
 - Audit experiment log: [`experiments/exp_001_data_audit.json`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/experiments/exp_001_data_audit.json)
@@ -44,7 +47,8 @@ This report provides a concise, high-level review of all work completed to date 
 
 ## 🔁 Sprint 2: Baseline Code Audit & Exact Reproduction
 
-### What Was Done:
+### What Was Done
+
 1. **Exact Reproduction Pipeline:**
    - Reproduced the original `AI_PBL (1).ipynb` training pipeline in modular code ([`notebooks/02_reproduction_script.py`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/notebooks/02_reproduction_script.py)).
    - Architecture: Conv1D(128, k=3) → MaxPool(2) → BiLSTM(50) → Dropout(0.4) → Dense(5).
@@ -59,7 +63,8 @@ This report provides a concise, high-level review of all work completed to date 
    - Mean 4-sensor accuracy: **97.43%**.
    - TDS at strict $\pm 20$ ppm tolerance was only **3.8%**, proving that TDS error was diluted in the original aggregated claim.
 
-### Key Deliverables:
+### Key Deliverables
+
 - Model checkpoint: `saved_models/baseline_cnn_bilstm_reproduction.keras`
 - Loss curve and forecast tracking: `fig07` and `fig08` in [`reports/figures/`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/reports/figures/)
 - Reproduction experiment log: [`experiments/exp_002_baseline_reproduction.json`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/experiments/exp_002_baseline_reproduction.json)
@@ -68,7 +73,8 @@ This report provides a concise, high-level review of all work completed to date 
 
 ## ⚖️ Sprint 3: Leakage Audit & Rigorous Splitting Protocols
 
-### What Was Done:
+### What Was Done
+
 1. **Leakage-Free Preprocessing Pipeline:**
    - Updated [`src/preprocessing.py`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/src/preprocessing.py) with **strict chronological 70% train / 10% val / 20% test** partitioning.
    - **Train-Only Scaling:** Scaler fit strictly on training rows; validation and test sets transformed using training statistics.
@@ -81,15 +87,16 @@ This report provides a concise, high-level review of all work completed to date 
    - **Strategy 2 (Chronological 70/10/20):** Strict temporal ordering, train-only scaling, no future leakage.
    - **Strategy 3 (Group / Session Split):** Held out Session 6 entirely (12,100 rows) to test cross-session domain generalization.
 
-### Empirical Split Comparison Summary Table:
+### Empirical Split Comparison Summary Table
 
 | Strategy | pH MAE | pH $R^2$ | pH Tol% ($\pm 0.1$) | TDS MAE (ppm) | TDS $R^2$ | TDS Tol% ($\pm 20$ ppm) | Temp MAE (°C) | Temp $R^2$ | Humidity MAE (%) | Humidity $R^2$ | Avg $R^2$ | Avg Tol% (All 5) | Tol% (No TDS) |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | **Random Split** *(Negative Control — Leakage)* | **0.032** | **0.903** | **97.8%** | **13.78** | **0.990** | **75.9%** | **0.070** | **0.967** | **0.326** | **0.983** | **0.969** | **94.6%** | **99.3%** |
 | **Chronological Split** *(70/10/20 Rigorous)* | **0.044** | -0.225 | **95.1%** | **41.30** | -0.220 | **0.02%** | **0.215** | **0.815** | **0.621** | **0.924** | **0.259** | **78.1%** | **97.7%** |
 | **Group / Session Split** *(Physical Run Holdout)* | **0.082** | -1.202 | **61.9%** | **89.12** | 0.367 | **0.00%** | **0.085** | **0.953** | **1.459** | **0.719** | **0.168** | **69.3%** | **86.6%** |
 
-### Key Scientific Findings for Paper:
+### Key Scientific Findings for Paper
+
 1. **The Autocorrelation Trap:**  
    Random split yields an inflated $R^2 = 0.969$ and $75.9\%$ TDS accuracy because adjacent sequences share 14/15 timesteps ($93.3\%$ feature overlap). The model memorizes neighboring values rather than learning forecasting. Random splitting is scientifically invalid for time series.
 2. **Honest Out-of-Sample Performance:**  
@@ -97,7 +104,8 @@ This report provides a concise, high-level review of all work completed to date 
 3. **The "Water Level" Illusion Exposed:**  
    In Group Split, water level dropped from 2 to 1 in held-out Session 6. The model predicted $\approx 1.96$ (error = $0.96$). Yet because tolerance is $\pm 1.0$, it still achieved **100.0% within-tolerance accuracy**, proving tolerance-based accuracy alone is misleading without MAE/RMSE.
 
-### Key Deliverables:
+### Key Deliverables
+
 - Formal protocol document: [`reports/evaluation_protocol.md`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/reports/evaluation_protocol.md)
 - Interactive analysis notebook: [`notebooks/03_leakage_comparison.ipynb`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/notebooks/03_leakage_comparison.ipynb)
 - Experiment records: [`experiments/exp_001_chronological_split.json`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/experiments/exp_001_chronological_split.json) and [`experiments/exp_003_leakage_comparison.json`](file:///c:/Users/youse/Downloads/JackHom/REPO/AI-Enabled-Nutrient-Balancing-System/experiments/exp_003_leakage_comparison.json)
@@ -153,11 +161,31 @@ AI-Enabled-Nutrient-Balancing-System/
     └── model_group_split.keras
 ```
 
+**summary of 3 sprints:**
+
+1. Audited the raw dataset.
+2. Verified the actual sampling interval.
+3. Identified operational sessions and shutdown gaps.
+4. Removed/flagged unreliable sensor behavior.
+5. Audited the original evaluation methodology.
+6. Reproduced the original CNN-BiLSTM baseline.
+7. Verified the reported performance independently.
+8. Discovered that TDS performance was much worse than the aggregated accuracy suggested.
+9. Identified scaling leakage.
+10. Identified test-as-validation leakage.
+11. Identified cross-shutdown sequence corruption.
+12. Built a leakage-free chronological pipeline.
+13. Added proper train/validation/test separation.
+14. Compared random, chronological, and session-based evaluation.
+15. Demonstrated that random splitting severely inflates performance.
+16. Established a rigorous evaluation protocol for future experiments.
+
 ---
 
 ## 🚀 Next Step: Sprint 4 — Baseline Benchmarking
 
 With the rigorous, leakage-free Chronological 70/10/20 protocol established and verified:
+
 - **Sprint 4 Goal:** Train and benchmark candidate temporal architectures under this identical protocol:
   - **B0:** Persistence Baseline (sanity floor)
   - **B1:** CNN-BiLSTM (rigorous re-run)
