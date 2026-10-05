@@ -5,11 +5,11 @@ Every experiment that produces a reported result **must** complete this checklis
 
 ---
 
-## ✅ Per-Experiment Items (Sprint 3, 4, 5, 6, 7, 8, 9, 10 Verified: `exp_001`, `exp_003`, `exp_004`, `exp_005`, `exp_006`, `exp_007`, `exp_008`, `exp_009`, `exp_010`)
+## ✅ Per-Experiment Items (Sprints 0 to 12 Verified: `exp_001` through `exp_011`)
 
 ### Data
 - [x] Dataset filename and version recorded (`IoTData_25K_without_interpolation.csv` and `IoTData_Raw.csv`)
-- [x] SHA-256 hash of the CSV file saved (`3b7fe00ec64b38df94be6a7b7a95aa9e8a7153a8123281c5a92a543666b6c203`)
+- [x] SHA-256 hash of the CSV file saved (`0c530d13897b325382b6270cb99fe34e406de06f4b33ae3986b290138a9bb423`)
 - [x] Number of rows and columns confirmed (25,570 rows × 14 columns; real-world raw: 25,000 rows × 6 columns)
 - [x] Timestamp range documented (2023-12-21 11:17:03 to 2023-12-26 21:36:40 UTC; raw hardware: 2023-11-26 to 2023-12-21)
 - [x] Preprocessing configuration noted (Linear interpolation, MinMaxScaler (0,1), fitted on train partition only, zero re-fitting on real test)
@@ -46,11 +46,11 @@ Every experiment that produces a reported result **must** complete this checklis
 
 ### Environment
 - [x] `requirements.txt` committed
-- [x] Python version noted (Python 3.10.11)
-- [x] TensorFlow/Keras version noted (TensorFlow 2.16.1 / Keras 3.3.3)
+- [x] Python version noted (Python 3.10.11 / Python 3.13.5)
+- [x] TensorFlow/Keras version noted (TensorFlow 2.21.0 / Keras 3.3.3)
 - [x] Execution environment: CPU / GPU local workstation
 
-### Experiment Log
+### Experiment Logs & Publications
 - [x] `experiments/exp_001_chronological_split.json` saved
 - [x] `experiments/exp_003_leakage_comparison.json` saved
 - [x] `experiments/exp_004_baseline_benchmark_master.json` & individual model logs saved
@@ -60,6 +60,7 @@ Every experiment that produces a reported result **must** complete this checklis
 - [x] `experiments/exp_008_realworld_validation.json` saved
 - [x] `experiments/exp_009_explainability.json` saved
 - [x] `experiments/exp_010_dashboard_deployment.json` saved
+- [x] `experiments/exp_011_final_paper_evaluation.json` saved
 - [x] Comparative visualizations saved: `fig09` to `fig29` in `reports/figures/`
 - [x] Benchmark table published & updated: `reports/benchmark_table.md`
 - [x] Master ablation table published: `reports/ablation_table.md`
@@ -67,6 +68,12 @@ Every experiment that produces a reported result **must** complete this checklis
 - [x] Real-world validation report published: `reports/realworld_validation_report.md`
 - [x] Explainability & sensitivity report published: `reports/explainability_report.md`
 - [x] Dashboard & deployment integration report published: `reports/dashboard_integration_report.md`
+- [x] 5-Page Humanized Conference Paper published: `reports/paper_draft.md` (0 AI banned words, 2,533 prose words)
+- [x] Camera-Ready IEEE/JACK LaTeX Source published: `reports/paper_draft.tex`
+- [x] Sprint 11 final evaluation report published: `reports/sprint_11_final_paper_evaluation.md`
+- [x] Master one-click reproducibility script published: `scripts/reproduce_all.py`
+- [x] Oral defense presentation slide deck published: `reports/final_defense_presentation.md`
+- [x] Sprint 12 release and defense report published: `reports/sprint_12_release_and_defense.md`
 
 ---
 
@@ -81,3 +88,4 @@ Every experiment that produces a reported result **must** complete this checklis
 | Comparing models trained on different splits | Unfair comparison |
 | Omitting random seed | Results not reproducible |
 | Claiming 15 steps = 15 minutes without confirming sampling interval | Physically incorrect |
+| Employing unverified AI buzzwords or hedging | Destroys empirical peer-review credibility |

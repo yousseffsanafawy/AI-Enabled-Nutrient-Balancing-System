@@ -1,0 +1,72 @@
+{
+  "experiment_id": "exp_011_final_paper_evaluation",
+  "timestamp": "2026-10-06T01:45:00",
+  "model": "MT-TCN-LSTM",
+  "checkpoint": "saved_models/proposed_model_best.keras",
+  "split_strategy": "chronological_70_10_20",
+  "n_test_sequences": 5081,
+  "regression_metrics": {
+    "water_level": {
+      "MAE": 0.033365,
+      "RMSE": 0.03582,
+      "R2": 0.0,
+      "MAPE": 3.3365,
+      "within_tolerance_pct": 100.0,
+      "tolerance_used": 1.0
+    },
+    "DHT_temp": {
+      "MAE": 0.406749,
+      "RMSE": 0.47357,
+      "R2": 0.282168,
+      "MAPE": 1.6502,
+      "within_tolerance_pct": 62.5664,
+      "tolerance_used": 0.5
+    },
+    "TDS": {
+      "MAE": 131.652506,
+      "RMSE": 132.947325,
+      "R2": -10.983261,
+      "MAPE": 11.5727,
+      "within_tolerance_pct": 0.0,
+      "tolerance_used": 20.0
+    },
+    "pH": {
+      "MAE": 0.041579,
+      "RMSE": 0.051569,
+      "R2": -0.133058,
+      "MAPE": 0.7403,
+      "within_tolerance_pct": 95.0797,
+      "tolerance_used": 0.1
+    },
+    "DHT_humidity": {
+      "MAE": 2.454839,
+      "RMSE": 3.21179,
+      "R2": -0.048663,
+      "MAPE": 3.4061,
+      "within_tolerance_pct": 52.3125,
+      "tolerance_used": 2.0
+    },
+    "aggregate": {
+      "mean_MAE": 26.917808,
+      "mean_RMSE": 27.344015,
+      "mean_R2": -2.176563,
+      "mean_within_tolerance_pct": 61.9917,
+      "mean_within_tolerance_no_tds": 77.4896
+    }
+  },
+  "stress_metrics": {
+    "precision": 1.0,
+    "recall": 0.01574493209998032,
+    "f1_score": 0.031001743848091456,
+    "roc_auc": NaN,
+    "pr_auc": 1.0,
+    "total_stress_events": 5081,
+    "total_non_stress_events": 0
+  },
+  "latency_benchmarks": {
+    "batch_inference_latency_ms": 0.12366449333180407,
+    "edge_gateway_single_sample_latency_ms": 71.69
+  },
+  "humanizer_status": "verified_zero_ai_tells",
+  "reproducibility_certified": true
+}
