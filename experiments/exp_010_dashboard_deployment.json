@@ -1,0 +1,61 @@
+{
+  "experiment_id": "exp_010_dashboard_deployment",
+  "sprint": "Sprint 10: Dashboard & Deployment Integration",
+  "timestamp_utc": "2026-10-06T00:45:00Z",
+  "design_directive": {
+    "concept": "LIVING INSTRUMENT",
+    "theme": "Mineral Botanical Instrument / Dark Obsidian Soil",
+    "color_palette": {
+      "obsidian_soil": "#11120F",
+      "aged_copper": "#B56A43",
+      "dried_saffron": "#C8953E",
+      "charred_olive": "#272A1E",
+      "mineral_bone": "#D8D0BA",
+      "moss_ash": "#66705A",
+      "deep_petrol": "#203D3A",
+      "oxide_red": "#8F4939"
+    },
+    "typography": {
+      "display": "Space Grotesk",
+      "monospace": "JetBrains Mono"
+    },
+    "anti_patterns_eliminated": [
+      "No glassmorphism (backdrop-filter / frosted blur completely removed)",
+      "No generic purple/blue/cyan SaaS gradients",
+      "No generic rounded bootstrap cards",
+      "No cyberpunk neon styling"
+    ]
+  },
+  "inference_pipeline": {
+    "engine_script": "src/inference.py",
+    "model_path": "saved_models/proposed_model_best.keras",
+    "quantized_tflite_path": "saved_models/proposed_model_quantized.tflite",
+    "scalers": {
+      "X": "data/processed/scaler_X.pkl",
+      "y": "data/processed/scaler_y.pkl"
+    },
+    "lookback_window": 15,
+    "physical_lag_seconds": 150.0,
+    "mc_dropout_passes": 50,
+    "inference_latency_ms": 71.69,
+    "safety_layer_integrated": true,
+    "agronomic_reasoning_integrated": true
+  },
+  "dashboard_features": {
+    "html_file": "Final Smart Hydrponic Dash.html",
+    "file_size_bytes": 62526,
+    "boot_sequence": "The System Wakes Up (Water -> Nutrients -> Environment -> Prediction)",
+    "custom_cursor": "Aged Copper magnetic point with dissipative ink trail",
+    "botanical_simulation": "HTML5 Canvas procedural living plant with viscous spring distance physics",
+    "tds_density_column": "Interactive particle concentration field reacting to nutrient dosing",
+    "sensors_visualized": ["pH Fluid Wave", "TDS Particle Density", "Thermal Oscillation", "Atmospheric Vapor", "Water Level Column"],
+    "closed_loop_safety": "5-Tier triage hierarchy (STANDBY, AUTO_DOSE, ALERT_HUMAN, EMERGENCY_HOLD)",
+    "physical_actuators": ["P1: Acid (HNO3)", "P2: Base (KOH)", "P3: Nutrient A+B"]
+  },
+  "unit_tests": {
+    "test_file": "tests/test_inference.py",
+    "passed": 3,
+    "failed": 0,
+    "duration_seconds": 5.66
+  }
+}
