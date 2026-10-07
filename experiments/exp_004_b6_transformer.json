@@ -1,0 +1,65 @@
+{
+  "experiment_id": "exp_004_b6_transformer",
+  "model_name": "Transformer Encoder",
+  "params": 53061,
+  "protocol": "chronological_70_10_20_boundary_aware",
+  "train_time_sec": 292.71,
+  "latency_ms": 85.458,
+  "metrics": {
+    "water_level": {
+      "MAE": 0.00955,
+      "RMSE": 0.011056,
+      "R2": 0.0,
+      "MAPE": 0.955,
+      "within_tolerance_pct": 100.0,
+      "tolerance_used": 1.0
+    },
+    "DHT_temp": {
+      "MAE": 0.493783,
+      "RMSE": 0.497846,
+      "R2": 0.206691,
+      "MAPE": 2.0142,
+      "within_tolerance_pct": 56.5243,
+      "tolerance_used": 0.5
+    },
+    "TDS": {
+      "MAE": 83.550981,
+      "RMSE": 85.878923,
+      "R2": -4.000219,
+      "MAPE": 7.3369,
+      "within_tolerance_pct": 0.0,
+      "tolerance_used": 20.0
+    },
+    "pH": {
+      "MAE": 0.078104,
+      "RMSE": 0.087122,
+      "R2": -2.233869,
+      "MAPE": 1.3927,
+      "within_tolerance_pct": 65.9516,
+      "tolerance_used": 0.1
+    },
+    "DHT_humidity": {
+      "MAE": 1.475139,
+      "RMSE": 1.548202,
+      "R2": 0.756333,
+      "MAPE": 1.9698,
+      "within_tolerance_pct": 91.5371,
+      "tolerance_used": 2.0
+    },
+    "aggregate": {
+      "mean_MAE": 17.121511,
+      "mean_RMSE": 17.60463,
+      "mean_R2": -1.054213,
+      "mean_within_tolerance_pct": 62.8026,
+      "mean_within_tolerance_no_tds": 78.5032
+    }
+  },
+  "tds_sensitivity": {
+    "\u00b110.0_ppm": 0.0,
+    "\u00b120.0_ppm": 0.0,
+    "\u00b130.0_ppm": 0.0,
+    "\u00b150.0_ppm": 0.02,
+    "\u00b175.0_ppm": 39.87,
+    "\u00b1100.0_ppm": 78.88
+  }
+}

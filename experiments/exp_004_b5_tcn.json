@@ -1,0 +1,65 @@
+{
+  "experiment_id": "exp_004_b5_tcn",
+  "model_name": "Temporal ConvNet",
+  "params": 65413,
+  "protocol": "chronological_70_10_20_boundary_aware",
+  "train_time_sec": 359.28,
+  "latency_ms": 97.09,
+  "metrics": {
+    "water_level": {
+      "MAE": 0.02144,
+      "RMSE": 0.026727,
+      "R2": 0.0,
+      "MAPE": 2.144,
+      "within_tolerance_pct": 100.0,
+      "tolerance_used": 1.0
+    },
+    "DHT_temp": {
+      "MAE": 0.197715,
+      "RMSE": 0.285118,
+      "R2": 0.739803,
+      "MAPE": 0.7932,
+      "within_tolerance_pct": 87.1285,
+      "tolerance_used": 0.5
+    },
+    "TDS": {
+      "MAE": 20.145431,
+      "RMSE": 22.873327,
+      "R2": 0.645289,
+      "MAPE": 1.7639,
+      "within_tolerance_pct": 52.8636,
+      "tolerance_used": 20.0
+    },
+    "pH": {
+      "MAE": 0.039189,
+      "RMSE": 0.047843,
+      "R2": 0.024782,
+      "MAPE": 0.6981,
+      "within_tolerance_pct": 98.0909,
+      "tolerance_used": 0.1
+    },
+    "DHT_humidity": {
+      "MAE": 0.482004,
+      "RMSE": 0.669744,
+      "R2": 0.954401,
+      "MAPE": 0.6644,
+      "within_tolerance_pct": 98.7404,
+      "tolerance_used": 2.0
+    },
+    "aggregate": {
+      "mean_MAE": 4.177156,
+      "mean_RMSE": 4.780552,
+      "mean_R2": 0.472855,
+      "mean_within_tolerance_pct": 87.3647,
+      "mean_within_tolerance_no_tds": 95.9899
+    }
+  },
+  "tds_sensitivity": {
+    "\u00b110.0_ppm": 7.79,
+    "\u00b120.0_ppm": 52.86,
+    "\u00b130.0_ppm": 97.21,
+    "\u00b150.0_ppm": 99.72,
+    "\u00b175.0_ppm": 99.74,
+    "\u00b1100.0_ppm": 99.78
+  }
+}

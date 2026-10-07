@@ -1,0 +1,133 @@
+{
+  "experiment_id": "exp_005_proposed_model",
+  "description": "Multi-Task Dilated Temporal Convolutional LSTM Network (MT-TCN-LSTM) with MC Dropout",
+  "timestamp": "2026-10-05 19:01:19",
+  "protocol": "chronological_70_10_20_boundary_aware",
+  "architecture": {
+    "name": "MT-TCN-LSTM",
+    "params": 75846,
+    "shared_encoder": "Causal Dilated Conv1D (d=1, 2) + LSTM(64)",
+    "heads": [
+      "forecast_output (Dense 5)",
+      "stress_output (Dense 1 sigmoid)"
+    ],
+    "lambda_stress": 0.2,
+    "latency_ms": 71.692,
+    "train_duration_sec": 78.63
+  },
+  "regression_metrics": {
+    "water_level": {
+      "MAE": 0.033365,
+      "RMSE": 0.03582,
+      "R2": 0.0,
+      "MAPE": 3.3365,
+      "within_tolerance_pct": 100.0,
+      "tolerance_used": 1.0
+    },
+    "DHT_temp": {
+      "MAE": 0.406749,
+      "RMSE": 0.47357,
+      "R2": 0.282168,
+      "MAPE": 1.6502,
+      "within_tolerance_pct": 62.5664,
+      "tolerance_used": 0.5
+    },
+    "TDS": {
+      "MAE": 131.652506,
+      "RMSE": 132.947325,
+      "R2": -10.983261,
+      "MAPE": 11.5727,
+      "within_tolerance_pct": 0.0,
+      "tolerance_used": 20.0
+    },
+    "pH": {
+      "MAE": 0.041579,
+      "RMSE": 0.051569,
+      "R2": -0.133058,
+      "MAPE": 0.7403,
+      "within_tolerance_pct": 95.0797,
+      "tolerance_used": 0.1
+    },
+    "DHT_humidity": {
+      "MAE": 2.454839,
+      "RMSE": 3.21179,
+      "R2": -0.048663,
+      "MAPE": 3.4061,
+      "within_tolerance_pct": 52.3125,
+      "tolerance_used": 2.0
+    },
+    "aggregate": {
+      "mean_MAE": 26.917808,
+      "mean_RMSE": 27.344015,
+      "mean_R2": -2.176563,
+      "mean_within_tolerance_pct": 61.9917,
+      "mean_within_tolerance_no_tds": 77.4896
+    }
+  },
+  "tds_sensitivity": {
+    "\u00b110.0_ppm": 0.0,
+    "\u00b120.0_ppm": 0.0,
+    "\u00b130.0_ppm": 0.0,
+    "\u00b150.0_ppm": 0.0,
+    "\u00b175.0_ppm": 1.4,
+    "\u00b1100.0_ppm": 3.5
+  },
+  "classification_metrics": {
+    "per_class": {
+      "Nominal": {
+        "precision": 1.0,
+        "recall": 0.9982,
+        "F1": 0.9991,
+        "support": 5010
+      },
+      "Stress": {
+        "precision": 0.8875,
+        "recall": 1.0,
+        "F1": 0.9404,
+        "support": 71
+      }
+    },
+    "macro_F1": 0.9697,
+    "macro_precision": 0.9437,
+    "macro_recall": 0.9991,
+    "confusion_matrix": [
+      [
+        5001,
+        9
+      ],
+      [
+        0,
+        71
+      ]
+    ]
+  },
+  "stress_roc_auc": 0.9995,
+  "uncertainty_calibration": {
+    "water_level": {
+      "error_uncertainty_corr": -0.1253,
+      "mean_uncertainty_sigma": 0.1239,
+      "coverage_95_pct": 100.0
+    },
+    "DHT_temp": {
+      "error_uncertainty_corr": 0.0755,
+      "mean_uncertainty_sigma": 1.0923,
+      "coverage_95_pct": 100.0
+    },
+    "TDS": {
+      "error_uncertainty_corr": 0.0468,
+      "mean_uncertainty_sigma": 165.5862,
+      "coverage_95_pct": 99.96
+    },
+    "pH": {
+      "error_uncertainty_corr": -0.1027,
+      "mean_uncertainty_sigma": 0.1859,
+      "coverage_95_pct": 99.98
+    },
+    "DHT_humidity": {
+      "error_uncertainty_corr": 0.1576,
+      "mean_uncertainty_sigma": 3.2458,
+      "coverage_95_pct": 95.32
+    },
+    "mean_correlation": 0.0104
+  }
+}

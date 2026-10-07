@@ -1,0 +1,841 @@
+{
+  "experiment_id": "exp_006_ablation_master",
+  "description": "Comprehensive ablation analysis covering architecture, window sizes, sensor subsets, and scaling",
+  "timestamp": "2026-10-05 19:37:01",
+  "summary_table": [
+    {
+      "ID": "A1_Full",
+      "Ablation Variant": "Full Proposed MT-TCN-LSTM (Reference)",
+      "Avg R2": -0.659436,
+      "Avg MAE": 9.228844,
+      "Avg Tol%": 65.865,
+      "pH MAE": 0.043443,
+      "TDS MAE": 43.606068,
+      "Stress F1": 0.9467,
+      "Params": "75,846",
+      "Time (s)": 46.45
+    },
+    {
+      "ID": "A2_NoConv",
+      "Ablation Variant": "No Dilated Conv1D (LSTM Multi-Task)",
+      "Avg R2": -1.418781,
+      "Avg MAE": 15.705602,
+      "Avg Tol%": 55.497,
+      "pH MAE": 0.080131,
+      "TDS MAE": 75.627022,
+      "Stress F1": 0.0,
+      "Params": "22,278",
+      "Time (s)": 22.94
+    },
+    {
+      "ID": "A3_GRU",
+      "Ablation Variant": "GRU instead of LSTM (TCN-GRU Multi-Task)",
+      "Avg R2": -0.486475,
+      "Avg MAE": 8.949471,
+      "Avg Tol%": 59.1458,
+      "pH MAE": 0.062197,
+      "TDS MAE": 42.075699,
+      "Stress F1": 0.9595,
+      "Params": "67,782",
+      "Time (s)": 48.87
+    },
+    {
+      "ID": "A4_SingleTask",
+      "Ablation Variant": "Single-Task Only (Forecasting, lambda=0.0)",
+      "Avg R2": -1.103451,
+      "Avg MAE": 16.751086,
+      "Avg Tol%": 60.4999,
+      "pH MAE": 0.048275,
+      "TDS MAE": 81.257076,
+      "Stress F1": "-",
+      "Params": "73,733",
+      "Time (s)": 48.26
+    },
+    {
+      "ID": "A5_pHOnly",
+      "Ablation Variant": "Single Output (pH Only Forecasting)",
+      "Avg R2": -0.537573,
+      "Avg MAE": 0.049907,
+      "Avg Tol%": 92.1472,
+      "pH MAE": 0.049907,
+      "TDS MAE": "-",
+      "Stress F1": 0.0,
+      "Params": "75,714",
+      "Time (s)": 79.74
+    },
+    {
+      "ID": "W_05",
+      "Ablation Variant": "Window = 5 Steps (50s)",
+      "Avg R2": -1.131785,
+      "Avg MAE": 16.137139,
+      "Avg Tol%": 61.1213,
+      "pH MAE": 0.049482,
+      "TDS MAE": 77.965781,
+      "Stress F1": 0.0,
+      "Params": "75,846",
+      "Time (s)": 29.64
+    },
+    {
+      "ID": "W_10",
+      "Ablation Variant": "Window = 10 Steps (100s)",
+      "Avg R2": -1.475283,
+      "Avg MAE": 13.175626,
+      "Avg Tol%": 57.14,
+      "pH MAE": 0.061005,
+      "TDS MAE": 62.670763,
+      "Stress F1": 0.0,
+      "Params": "75,846",
+      "Time (s)": 38.12
+    },
+    {
+      "ID": "W_30",
+      "Ablation Variant": "Window = 30 Steps (300s / 5 min)",
+      "Avg R2": -1.220963,
+      "Avg MAE": 9.800606,
+      "Avg Tol%": 61.9363,
+      "pH MAE": 0.040756,
+      "TDS MAE": 45.903404,
+      "Stress F1": 0.0,
+      "Params": "75,846",
+      "Time (s)": 50.11
+    },
+    {
+      "ID": "W_60",
+      "Ablation Variant": "Window = 60 Steps (600s / 10 min)",
+      "Avg R2": -1.247242,
+      "Avg MAE": 9.049764,
+      "Avg Tol%": 63.8349,
+      "pH MAE": 0.049125,
+      "TDS MAE": 42.373262,
+      "Stress F1": 0.8525,
+      "Params": "75,846",
+      "Time (s)": 94.54
+    },
+    {
+      "ID": "F_ChemOnly",
+      "Ablation Variant": "Chemical Sensors Only (pH + TDS)",
+      "Avg R2": -0.365868,
+      "Avg MAE": 26.30989,
+      "Avg Tol%": 49.0553,
+      "pH MAE": 0.035025,
+      "TDS MAE": 52.584755,
+      "Stress F1": 0.0,
+      "Params": "74,979",
+      "Time (s)": 47.0
+    },
+    {
+      "ID": "P_Standard",
+      "Ablation Variant": "StandardScaler (Z-score Normalization)",
+      "Avg R2": -0.51756,
+      "Avg MAE": 17.545959,
+      "Avg Tol%": 76.725,
+      "pH MAE": 0.038613,
+      "TDS MAE": 86.189767,
+      "Stress F1": 0.9726,
+      "Params": "75,846",
+      "Time (s)": 203.89
+    }
+  ],
+  "variants": {
+    "A1_Full": {
+      "variant_id": "A1_Full",
+      "variant_name": "Full Proposed MT-TCN-LSTM (Reference)",
+      "config": {
+        "time_steps": 15,
+        "features": [
+          "water_level",
+          "DHT_temp",
+          "TDS",
+          "pH",
+          "DHT_humidity"
+        ],
+        "scaler_type": "minmax",
+        "model_type": "full"
+      },
+      "train_time_sec": 46.45,
+      "epochs": 7,
+      "params": 75846,
+      "regression_metrics": {
+        "water_level": {
+          "MAE": 0.035247,
+          "RMSE": 0.044244,
+          "R2": 0.0,
+          "MAPE": 3.5247,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 1.0
+        },
+        "DHT_temp": {
+          "MAE": 0.945579,
+          "RMSE": 1.114289,
+          "R2": -2.974195,
+          "MAPE": 3.8083,
+          "within_tolerance_pct": 36.4298,
+          "tolerance_used": 0.5
+        },
+        "TDS": {
+          "MAE": 43.606068,
+          "RMSE": 50.220422,
+          "R2": -0.709923,
+          "MAPE": 3.8074,
+          "within_tolerance_pct": 24.4046,
+          "tolerance_used": 20.0
+        },
+        "pH": {
+          "MAE": 0.043443,
+          "RMSE": 0.053594,
+          "R2": -0.223777,
+          "MAPE": 0.7709,
+          "within_tolerance_pct": 95.001,
+          "tolerance_used": 0.1
+        },
+        "DHT_humidity": {
+          "MAE": 1.513885,
+          "RMSE": 1.95687,
+          "R2": 0.610717,
+          "MAPE": 2.0863,
+          "within_tolerance_pct": 73.4895,
+          "tolerance_used": 2.0
+        },
+        "aggregate": {
+          "mean_MAE": 9.228844,
+          "mean_RMSE": 10.677884,
+          "mean_R2": -0.659436,
+          "mean_within_tolerance_pct": 65.865,
+          "mean_within_tolerance_no_tds": 76.2301
+        }
+      },
+      "stress_f1": 0.9467
+    },
+    "A2_NoConv": {
+      "variant_id": "A2_NoConv",
+      "variant_name": "No Dilated Conv1D (LSTM Multi-Task)",
+      "config": {
+        "time_steps": 15,
+        "features": [
+          "water_level",
+          "DHT_temp",
+          "TDS",
+          "pH",
+          "DHT_humidity"
+        ],
+        "scaler_type": "minmax",
+        "model_type": "no_conv"
+      },
+      "train_time_sec": 22.94,
+      "epochs": 7,
+      "params": 22278,
+      "regression_metrics": {
+        "water_level": {
+          "MAE": 0.059904,
+          "RMSE": 0.072328,
+          "R2": 0.0,
+          "MAPE": 5.9904,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 1.0
+        },
+        "DHT_temp": {
+          "MAE": 0.566804,
+          "RMSE": 0.725472,
+          "R2": -0.68459,
+          "MAPE": 2.2806,
+          "within_tolerance_pct": 49.7146,
+          "tolerance_used": 0.5
+        },
+        "TDS": {
+          "MAE": 75.627022,
+          "RMSE": 84.460086,
+          "R2": -3.836362,
+          "MAPE": 6.6319,
+          "within_tolerance_pct": 10.9034,
+          "tolerance_used": 20.0
+        },
+        "pH": {
+          "MAE": 0.080131,
+          "RMSE": 0.094847,
+          "R2": -2.832787,
+          "MAPE": 1.4182,
+          "within_tolerance_pct": 65.5186,
+          "tolerance_used": 0.1
+        },
+        "DHT_humidity": {
+          "MAE": 2.194151,
+          "RMSE": 2.698322,
+          "R2": 0.259834,
+          "MAPE": 3.0227,
+          "within_tolerance_pct": 51.3482,
+          "tolerance_used": 2.0
+        },
+        "aggregate": {
+          "mean_MAE": 15.705602,
+          "mean_RMSE": 17.610211,
+          "mean_R2": -1.418781,
+          "mean_within_tolerance_pct": 55.497,
+          "mean_within_tolerance_no_tds": 66.6454
+        }
+      },
+      "stress_f1": 0.0
+    },
+    "A3_GRU": {
+      "variant_id": "A3_GRU",
+      "variant_name": "GRU instead of LSTM (TCN-GRU Multi-Task)",
+      "config": {
+        "time_steps": 15,
+        "features": [
+          "water_level",
+          "DHT_temp",
+          "TDS",
+          "pH",
+          "DHT_humidity"
+        ],
+        "scaler_type": "minmax",
+        "model_type": "gru"
+      },
+      "train_time_sec": 48.87,
+      "epochs": 8,
+      "params": 67782,
+      "regression_metrics": {
+        "water_level": {
+          "MAE": 0.074283,
+          "RMSE": 0.07892,
+          "R2": 0.0,
+          "MAPE": 7.4283,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 1.0
+        },
+        "DHT_temp": {
+          "MAE": 0.678889,
+          "RMSE": 0.822677,
+          "R2": -1.166268,
+          "MAPE": 2.7325,
+          "within_tolerance_pct": 42.9246,
+          "tolerance_used": 0.5
+        },
+        "TDS": {
+          "MAE": 42.075699,
+          "RMSE": 45.630855,
+          "R2": -0.411669,
+          "MAPE": 3.6895,
+          "within_tolerance_pct": 14.2885,
+          "tolerance_used": 20.0
+        },
+        "pH": {
+          "MAE": 0.062197,
+          "RMSE": 0.074344,
+          "R2": -1.354822,
+          "MAPE": 1.1003,
+          "within_tolerance_pct": 80.2204,
+          "tolerance_used": 0.1
+        },
+        "DHT_humidity": {
+          "MAE": 1.856287,
+          "RMSE": 2.216911,
+          "R2": 0.500382,
+          "MAPE": 2.5277,
+          "within_tolerance_pct": 58.2956,
+          "tolerance_used": 2.0
+        },
+        "aggregate": {
+          "mean_MAE": 8.949471,
+          "mean_RMSE": 9.764741,
+          "mean_R2": -0.486475,
+          "mean_within_tolerance_pct": 59.1458,
+          "mean_within_tolerance_no_tds": 70.3601
+        }
+      },
+      "stress_f1": 0.9595
+    },
+    "A4_SingleTask": {
+      "variant_id": "A4_SingleTask",
+      "variant_name": "Single-Task Only (Forecasting, lambda=0.0)",
+      "config": {
+        "time_steps": 15,
+        "features": [
+          "water_level",
+          "DHT_temp",
+          "TDS",
+          "pH",
+          "DHT_humidity"
+        ],
+        "scaler_type": "minmax",
+        "model_type": "single_task"
+      },
+      "train_time_sec": 48.26,
+      "epochs": 8,
+      "params": 73733,
+      "regression_metrics": {
+        "water_level": {
+          "MAE": 0.010959,
+          "RMSE": 0.011976,
+          "R2": 0.0,
+          "MAPE": 1.0959,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 1.0
+        },
+        "DHT_temp": {
+          "MAE": 0.712581,
+          "RMSE": 0.830947,
+          "R2": -1.210038,
+          "MAPE": 2.8715,
+          "within_tolerance_pct": 40.4448,
+          "tolerance_used": 0.5
+        },
+        "TDS": {
+          "MAE": 81.257076,
+          "RMSE": 87.951894,
+          "R2": -4.244525,
+          "MAPE": 7.1276,
+          "within_tolerance_pct": 5.373,
+          "tolerance_used": 20.0
+        },
+        "pH": {
+          "MAE": 0.048275,
+          "RMSE": 0.059923,
+          "R2": -0.529866,
+          "MAPE": 0.8536,
+          "within_tolerance_pct": 89.5887,
+          "tolerance_used": 0.1
+        },
+        "DHT_humidity": {
+          "MAE": 1.726538,
+          "RMSE": 2.289402,
+          "R2": 0.467173,
+          "MAPE": 2.392,
+          "within_tolerance_pct": 67.0931,
+          "tolerance_used": 2.0
+        },
+        "aggregate": {
+          "mean_MAE": 16.751086,
+          "mean_RMSE": 18.228828,
+          "mean_R2": -1.103451,
+          "mean_within_tolerance_pct": 60.4999,
+          "mean_within_tolerance_no_tds": 74.2816
+        }
+      },
+      "stress_f1": null
+    },
+    "A5_pHOnly": {
+      "variant_id": "A5_pHOnly",
+      "variant_name": "Single Output (pH Only Forecasting)",
+      "config": {
+        "time_steps": 15,
+        "features": [
+          "water_level",
+          "DHT_temp",
+          "TDS",
+          "pH",
+          "DHT_humidity"
+        ],
+        "scaler_type": "minmax",
+        "model_type": "full"
+      },
+      "train_time_sec": 79.74,
+      "epochs": 13,
+      "params": 75714,
+      "regression_metrics": {
+        "pH": {
+          "MAE": 0.049907,
+          "RMSE": 0.060074,
+          "R2": -0.537573,
+          "MAPE": 0.8901,
+          "within_tolerance_pct": 92.1472,
+          "tolerance_used": 0.1
+        },
+        "aggregate": {
+          "mean_MAE": 0.049907,
+          "mean_RMSE": 0.060074,
+          "mean_R2": -0.537573,
+          "mean_within_tolerance_pct": 92.1472,
+          "mean_within_tolerance_no_tds": 92.1472
+        }
+      },
+      "stress_f1": 0.0
+    },
+    "W_05": {
+      "variant_id": "W_05",
+      "variant_name": "Window = 5 Steps (50s)",
+      "config": {
+        "time_steps": 5,
+        "features": [
+          "water_level",
+          "DHT_temp",
+          "TDS",
+          "pH",
+          "DHT_humidity"
+        ],
+        "scaler_type": "minmax",
+        "model_type": "full"
+      },
+      "train_time_sec": 29.64,
+      "epochs": 6,
+      "params": 75846,
+      "regression_metrics": {
+        "water_level": {
+          "MAE": 0.10328,
+          "RMSE": 0.104631,
+          "R2": 0.0,
+          "MAPE": 10.328,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 1.0
+        },
+        "DHT_temp": {
+          "MAE": 0.697745,
+          "RMSE": 0.832425,
+          "R2": -1.20169,
+          "MAPE": 2.8104,
+          "within_tolerance_pct": 41.7565,
+          "tolerance_used": 0.5
+        },
+        "TDS": {
+          "MAE": 77.965781,
+          "RMSE": 93.784581,
+          "R2": -4.289672,
+          "MAPE": 6.8349,
+          "within_tolerance_pct": 11.2919,
+          "tolerance_used": 20.0
+        },
+        "pH": {
+          "MAE": 0.049482,
+          "RMSE": 0.060426,
+          "R2": -0.544984,
+          "MAPE": 0.8795,
+          "within_tolerance_pct": 89.7667,
+          "tolerance_used": 0.1
+        },
+        "DHT_humidity": {
+          "MAE": 1.869407,
+          "RMSE": 2.475733,
+          "R2": 0.377423,
+          "MAPE": 2.5967,
+          "within_tolerance_pct": 62.7916,
+          "tolerance_used": 2.0
+        },
+        "aggregate": {
+          "mean_MAE": 16.137139,
+          "mean_RMSE": 19.451559,
+          "mean_R2": -1.131785,
+          "mean_within_tolerance_pct": 61.1213,
+          "mean_within_tolerance_no_tds": 73.5787
+        }
+      },
+      "stress_f1": 0.0
+    },
+    "W_10": {
+      "variant_id": "W_10",
+      "variant_name": "Window = 10 Steps (100s)",
+      "config": {
+        "time_steps": 10,
+        "features": [
+          "water_level",
+          "DHT_temp",
+          "TDS",
+          "pH",
+          "DHT_humidity"
+        ],
+        "scaler_type": "minmax",
+        "model_type": "full"
+      },
+      "train_time_sec": 38.12,
+      "epochs": 6,
+      "params": 75846,
+      "regression_metrics": {
+        "water_level": {
+          "MAE": 0.038301,
+          "RMSE": 0.043533,
+          "R2": 0.0,
+          "MAPE": 3.8301,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 1.0
+        },
+        "DHT_temp": {
+          "MAE": 1.065912,
+          "RMSE": 1.219493,
+          "R2": -3.742539,
+          "MAPE": 4.2981,
+          "within_tolerance_pct": 26.9888,
+          "tolerance_used": 0.5
+        },
+        "TDS": {
+          "MAE": 62.670763,
+          "RMSE": 75.940829,
+          "R2": -2.67531,
+          "MAPE": 5.4763,
+          "within_tolerance_pct": 16.0872,
+          "tolerance_used": 20.0
+        },
+        "pH": {
+          "MAE": 0.061005,
+          "RMSE": 0.073406,
+          "R2": -1.296517,
+          "MAPE": 1.081,
+          "within_tolerance_pct": 81.261,
+          "tolerance_used": 0.1
+        },
+        "DHT_humidity": {
+          "MAE": 2.042151,
+          "RMSE": 2.55242,
+          "R2": 0.337951,
+          "MAPE": 2.8231,
+          "within_tolerance_pct": 61.3632,
+          "tolerance_used": 2.0
+        },
+        "aggregate": {
+          "mean_MAE": 13.175626,
+          "mean_RMSE": 15.965936,
+          "mean_R2": -1.475283,
+          "mean_within_tolerance_pct": 57.14,
+          "mean_within_tolerance_no_tds": 67.4032
+        }
+      },
+      "stress_f1": 0.0
+    },
+    "W_30": {
+      "variant_id": "W_30",
+      "variant_name": "Window = 30 Steps (300s / 5 min)",
+      "config": {
+        "time_steps": 30,
+        "features": [
+          "water_level",
+          "DHT_temp",
+          "TDS",
+          "pH",
+          "DHT_humidity"
+        ],
+        "scaler_type": "minmax",
+        "model_type": "full"
+      },
+      "train_time_sec": 50.11,
+      "epochs": 6,
+      "params": 75846,
+      "regression_metrics": {
+        "water_level": {
+          "MAE": 0.032457,
+          "RMSE": 0.035316,
+          "R2": 0.0,
+          "MAPE": 3.2457,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 1.0
+        },
+        "DHT_temp": {
+          "MAE": 1.163044,
+          "RMSE": 1.321534,
+          "R2": -4.653337,
+          "MAPE": 4.691,
+          "within_tolerance_pct": 21.6393,
+          "tolerance_used": 0.5
+        },
+        "TDS": {
+          "MAE": 45.903404,
+          "RMSE": 56.846256,
+          "R2": -1.722576,
+          "MAPE": 4.0044,
+          "within_tolerance_pct": 28.5092,
+          "tolerance_used": 20.0
+        },
+        "pH": {
+          "MAE": 0.040756,
+          "RMSE": 0.050374,
+          "R2": -0.095316,
+          "MAPE": 0.7241,
+          "within_tolerance_pct": 96.3176,
+          "tolerance_used": 0.1
+        },
+        "DHT_humidity": {
+          "MAE": 1.863369,
+          "RMSE": 2.494955,
+          "R2": 0.366415,
+          "MAPE": 2.5913,
+          "within_tolerance_pct": 63.2152,
+          "tolerance_used": 2.0
+        },
+        "aggregate": {
+          "mean_MAE": 9.800606,
+          "mean_RMSE": 12.149687,
+          "mean_R2": -1.220963,
+          "mean_within_tolerance_pct": 61.9363,
+          "mean_within_tolerance_no_tds": 70.293
+        }
+      },
+      "stress_f1": 0.0
+    },
+    "W_60": {
+      "variant_id": "W_60",
+      "variant_name": "Window = 60 Steps (600s / 10 min)",
+      "config": {
+        "time_steps": 60,
+        "features": [
+          "water_level",
+          "DHT_temp",
+          "TDS",
+          "pH",
+          "DHT_humidity"
+        ],
+        "scaler_type": "minmax",
+        "model_type": "full"
+      },
+      "train_time_sec": 94.54,
+      "epochs": 7,
+      "params": 75846,
+      "regression_metrics": {
+        "water_level": {
+          "MAE": 0.055062,
+          "RMSE": 0.064479,
+          "R2": 0.0,
+          "MAPE": 5.5062,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 1.0
+        },
+        "DHT_temp": {
+          "MAE": 0.906284,
+          "RMSE": 1.031411,
+          "R2": -2.522854,
+          "MAPE": 3.6546,
+          "within_tolerance_pct": 32.8191,
+          "tolerance_used": 0.5
+        },
+        "TDS": {
+          "MAE": 42.373262,
+          "RMSE": 51.671712,
+          "R2": -3.534424,
+          "MAPE": 3.7165,
+          "within_tolerance_pct": 30.3947,
+          "tolerance_used": 20.0
+        },
+        "pH": {
+          "MAE": 0.049125,
+          "RMSE": 0.060404,
+          "R2": -0.601412,
+          "MAPE": 0.8761,
+          "within_tolerance_pct": 89.1605,
+          "tolerance_used": 0.1
+        },
+        "DHT_humidity": {
+          "MAE": 1.865089,
+          "RMSE": 2.378495,
+          "R2": 0.422481,
+          "MAPE": 2.5717,
+          "within_tolerance_pct": 66.8002,
+          "tolerance_used": 2.0
+        },
+        "aggregate": {
+          "mean_MAE": 9.049764,
+          "mean_RMSE": 11.0413,
+          "mean_R2": -1.247242,
+          "mean_within_tolerance_pct": 63.8349,
+          "mean_within_tolerance_no_tds": 72.195
+        }
+      },
+      "stress_f1": 0.8525
+    },
+    "F_ChemOnly": {
+      "variant_id": "F_ChemOnly",
+      "variant_name": "Chemical Sensors Only (pH + TDS)",
+      "config": {
+        "time_steps": 15,
+        "features": [
+          "pH",
+          "TDS"
+        ],
+        "scaler_type": "minmax",
+        "model_type": "full"
+      },
+      "train_time_sec": 47.0,
+      "epochs": 6,
+      "params": 74979,
+      "regression_metrics": {
+        "pH": {
+          "MAE": 0.035025,
+          "RMSE": 0.042456,
+          "R2": 0.232036,
+          "MAPE": 0.6212,
+          "within_tolerance_pct": 98.0319,
+          "tolerance_used": 0.1
+        },
+        "TDS": {
+          "MAE": 52.584755,
+          "RMSE": 53.819244,
+          "R2": -0.963772,
+          "MAPE": 4.5896,
+          "within_tolerance_pct": 0.0787,
+          "tolerance_used": 20.0
+        },
+        "aggregate": {
+          "mean_MAE": 26.30989,
+          "mean_RMSE": 26.93085,
+          "mean_R2": -0.365868,
+          "mean_within_tolerance_pct": 49.0553,
+          "mean_within_tolerance_no_tds": 98.0319
+        }
+      },
+      "stress_f1": 0.0
+    },
+    "P_Standard": {
+      "variant_id": "P_Standard",
+      "variant_name": "StandardScaler (Z-score Normalization)",
+      "config": {
+        "time_steps": 15,
+        "features": [
+          "water_level",
+          "DHT_temp",
+          "TDS",
+          "pH",
+          "DHT_humidity"
+        ],
+        "scaler_type": "standard",
+        "model_type": "full"
+      },
+      "train_time_sec": 203.89,
+      "epochs": 20,
+      "params": 75846,
+      "regression_metrics": {
+        "water_level": {
+          "MAE": 0.207317,
+          "RMSE": 0.2309,
+          "R2": 0.0,
+          "MAPE": 20.7317,
+          "within_tolerance_pct": 100.0,
+          "tolerance_used": 1.0
+        },
+        "DHT_temp": {
+          "MAE": 0.187568,
+          "RMSE": 0.22996,
+          "R2": 0.830739,
+          "MAPE": 0.7563,
+          "within_tolerance_pct": 99.9803,
+          "tolerance_used": 0.5
+        },
+        "TDS": {
+          "MAE": 86.189767,
+          "RMSE": 88.324227,
+          "R2": -4.289023,
+          "MAPE": 7.5687,
+          "within_tolerance_pct": 0.0,
+          "tolerance_used": 20.0
+        },
+        "pH": {
+          "MAE": 0.038613,
+          "RMSE": 0.047302,
+          "R2": 0.046711,
+          "MAPE": 0.6878,
+          "within_tolerance_pct": 97.343,
+          "tolerance_used": 0.1
+        },
+        "DHT_humidity": {
+          "MAE": 1.106531,
+          "RMSE": 1.316636,
+          "R2": 0.823773,
+          "MAPE": 1.5177,
+          "within_tolerance_pct": 86.3019,
+          "tolerance_used": 2.0
+        },
+        "aggregate": {
+          "mean_MAE": 17.545959,
+          "mean_RMSE": 18.029805,
+          "mean_R2": -0.51756,
+          "mean_within_tolerance_pct": 76.725,
+          "mean_within_tolerance_no_tds": 95.9063
+        }
+      },
+      "stress_f1": 0.9726
+    }
+  }
+}

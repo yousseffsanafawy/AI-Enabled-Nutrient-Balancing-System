@@ -186,13 +186,14 @@ def compute_stress_metrics(
     Returns:
         Dict with precision, recall, F1 per class and macro-averaged.
     """
+    labels = list(range(len(class_names))) if class_names else None
     prec, rec, f1, support = precision_recall_fscore_support(
-        y_true_labels, y_pred_labels, average=None, zero_division=0
+        y_true_labels, y_pred_labels, labels=labels, average=None, zero_division=0
     )
     macro_prec, macro_rec, macro_f1, _ = precision_recall_fscore_support(
-        y_true_labels, y_pred_labels, average="macro", zero_division=0
+        y_true_labels, y_pred_labels, labels=labels, average="macro", zero_division=0
     )
-    cm = confusion_matrix(y_true_labels, y_pred_labels)
+    cm = confusion_matrix(y_true_labels, y_pred_labels, labels=labels)
 
     results = {
         "per_class": {

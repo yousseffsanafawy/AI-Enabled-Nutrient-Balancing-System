@@ -1,0 +1,65 @@
+{
+  "experiment_id": "exp_004_b7_cnn_gru",
+  "model_name": "CNN + GRU Hybrid",
+  "params": 41541,
+  "protocol": "chronological_70_10_20_boundary_aware",
+  "train_time_sec": 107.29,
+  "latency_ms": 151.965,
+  "metrics": {
+    "water_level": {
+      "MAE": 0.019549,
+      "RMSE": 0.027101,
+      "R2": 0.0,
+      "MAPE": 1.9549,
+      "within_tolerance_pct": 100.0,
+      "tolerance_used": 1.0
+    },
+    "DHT_temp": {
+      "MAE": 0.521133,
+      "RMSE": 0.602256,
+      "R2": -0.160957,
+      "MAPE": 2.1006,
+      "within_tolerance_pct": 43.0033,
+      "tolerance_used": 0.5
+    },
+    "TDS": {
+      "MAE": 140.600848,
+      "RMSE": 149.475156,
+      "R2": -14.147949,
+      "MAPE": 12.3495,
+      "within_tolerance_pct": 0.0,
+      "tolerance_used": 20.0
+    },
+    "pH": {
+      "MAE": 0.042394,
+      "RMSE": 0.052603,
+      "R2": -0.178926,
+      "MAPE": 0.7518,
+      "within_tolerance_pct": 95.9654,
+      "tolerance_used": 0.1
+    },
+    "DHT_humidity": {
+      "MAE": 1.638065,
+      "RMSE": 2.176654,
+      "R2": 0.518362,
+      "MAPE": 2.2758,
+      "within_tolerance_pct": 67.1521,
+      "tolerance_used": 2.0
+    },
+    "aggregate": {
+      "mean_MAE": 28.564398,
+      "mean_RMSE": 30.466754,
+      "mean_R2": -2.793894,
+      "mean_within_tolerance_pct": 61.2242,
+      "mean_within_tolerance_no_tds": 76.5302
+    }
+  },
+  "tds_sensitivity": {
+    "\u00b110.0_ppm": 0.0,
+    "\u00b120.0_ppm": 0.0,
+    "\u00b130.0_ppm": 0.02,
+    "\u00b150.0_ppm": 0.02,
+    "\u00b175.0_ppm": 4.21,
+    "\u00b1100.0_ppm": 35.33
+  }
+}

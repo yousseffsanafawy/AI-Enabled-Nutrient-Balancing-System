@@ -18,6 +18,7 @@ from src.models.bilstm_model import build_bilstm
 from src.models.tcn_model import build_tcn
 from src.models.transformer_model import build_transformer
 from src.models.cnn_gru_model import build_cnn_gru
+from src.models.proposed_model import build_proposed_model
 
 __all__ = [
     "build_cnn_bilstm",
@@ -27,4 +28,6 @@ __all__ = [
     "build_tcn",
     "build_transformer",
     "build_cnn_gru",
+    "build_proposed_model",
 ]
+

@@ -21,7 +21,7 @@ import joblib
 import numpy as np
 import pandas as pd
 from typing import Tuple, List, Optional, Dict, Any
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
 
 from src.config import (
@@ -135,6 +135,7 @@ def split_chronological(
     max_gap_seconds: float = 60.0,
     interpolate: bool = True,
     scale_range: Tuple[float, float] = SCALE_RANGE,
+    scaler_type: str = "minmax",
     verbose: bool = True,
 ) -> Dict[str, Any]:
     """
@@ -162,8 +163,12 @@ def split_chronological(
     test_df = df_clean.iloc[val_end:].copy()
 
     # Fit scalers STRICTLY on training data
-    scaler_X = MinMaxScaler(feature_range=scale_range)
-    scaler_y = MinMaxScaler(feature_range=scale_range)
+    if scaler_type.lower() in ("standard", "zscore", "standardscaler"):
+        scaler_X = StandardScaler()
+        scaler_y = StandardScaler()
+    else:
+        scaler_X = MinMaxScaler(feature_range=scale_range)
+        scaler_y = MinMaxScaler(feature_range=scale_range)
 
     train_X_raw = train_df[features].values
     train_y_raw = train_df[target_cols].values
@@ -408,6 +413,7 @@ def build_pipeline(
     val_ratio: float = VAL_RATIO,
     max_gap_seconds: float = 60.0,
     interpolate: bool = True,
+    scaler_type: str = "minmax",
     scaler_save_path: Optional[str] = None,
     verbose: bool = True,
 ) -> Dict[str, Any]:
@@ -424,6 +430,7 @@ def build_pipeline(
         val_ratio        : Val ratio (for chronological and random).
         max_gap_seconds  : Maximum gap in seconds before segment reset.
         interpolate      : Whether to interpolate missing values.
+        scaler_type      : "minmax" or "standard" (Z-score normalization).
         scaler_save_path : Optional directory to save fitted scalers.
         verbose          : Whether to print logging.
 
@@ -435,7 +442,8 @@ def build_pipeline(
         res = split_chronological(
             df=df, features=features, target_cols=target_cols,
             time_steps=time_steps, train_ratio=train_ratio, val_ratio=val_ratio,
-            max_gap_seconds=max_gap_seconds, interpolate=interpolate, verbose=verbose,
+            max_gap_seconds=max_gap_seconds, interpolate=interpolate,
+            scaler_type=scaler_type, verbose=verbose,
         )
     elif split_strategy == "random":
         res = split_random(

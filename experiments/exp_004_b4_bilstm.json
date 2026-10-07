@@ -1,0 +1,65 @@
+{
+  "experiment_id": "exp_004_b4_bilstm",
+  "model_name": "Bidirectional LSTM",
+  "params": 25797,
+  "protocol": "chronological_70_10_20_boundary_aware",
+  "train_time_sec": 82.62,
+  "latency_ms": 90.894,
+  "metrics": {
+    "water_level": {
+      "MAE": 0.020294,
+      "RMSE": 0.021755,
+      "R2": 0.0,
+      "MAPE": 2.0294,
+      "within_tolerance_pct": 100.0,
+      "tolerance_used": 1.0
+    },
+    "DHT_temp": {
+      "MAE": 1.015223,
+      "RMSE": 1.090305,
+      "R2": -2.804952,
+      "MAPE": 4.1074,
+      "within_tolerance_pct": 8.8565,
+      "tolerance_used": 0.5
+    },
+    "TDS": {
+      "MAE": 142.99552,
+      "RMSE": 147.521139,
+      "R2": -13.754494,
+      "MAPE": 12.5616,
+      "within_tolerance_pct": 0.0,
+      "tolerance_used": 20.0
+    },
+    "pH": {
+      "MAE": 0.060335,
+      "RMSE": 0.072945,
+      "R2": -1.267061,
+      "MAPE": 1.0669,
+      "within_tolerance_pct": 81.6768,
+      "tolerance_used": 0.1
+    },
+    "DHT_humidity": {
+      "MAE": 0.944857,
+      "RMSE": 1.238734,
+      "R2": 0.84401,
+      "MAPE": 1.302,
+      "within_tolerance_pct": 86.42,
+      "tolerance_used": 2.0
+    },
+    "aggregate": {
+      "mean_MAE": 29.007246,
+      "mean_RMSE": 29.988976,
+      "mean_R2": -3.396499,
+      "mean_within_tolerance_pct": 55.3907,
+      "mean_within_tolerance_no_tds": 69.2383
+    }
+  },
+  "tds_sensitivity": {
+    "\u00b110.0_ppm": 0.0,
+    "\u00b120.0_ppm": 0.0,
+    "\u00b130.0_ppm": 0.0,
+    "\u00b150.0_ppm": 0.02,
+    "\u00b175.0_ppm": 4.11,
+    "\u00b1100.0_ppm": 12.12
+  }
+}
