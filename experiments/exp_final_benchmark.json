@@ -1,0 +1,782 @@
+{
+  "experiment_id": "exp_final_benchmark",
+  "description": "Unified final benchmark of baselines B0-B7 and MT-TCN-LSTM on 5,081 chronological test sequences",
+  "timestamp": "2026-10-08 00:22:25",
+  "hardware_info": {
+    "platform": "Windows-11-10.0.26300-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "python_version": "3.13.5",
+    "tensorflow_version": "2.21.0",
+    "device": "CPU (oneDNN enabled)"
+  },
+  "n_test_sequences": 5081,
+  "results": [
+    {
+      "id": "B0",
+      "name": "Persistence Baseline",
+      "params": 0,
+      "latency_1_ms": 0.01,
+      "latency_50_mc_ms": 0.01,
+      "ph_mae": 0.041984,
+      "ph_rmse": 0.054819,
+      "ph_r2": -0.280368,
+      "ph_ci": "0.0418 \u00b1 0.0006",
+      "tds_mae": 0.482429,
+      "tds_rmse": 3.151529,
+      "tds_r2": 0.993266,
+      "tds_ci": "0.49 \u00b1 0.06",
+      "avg_r2": 0.740864,
+      "avg_tol_all_5": 99.0435,
+      "avg_tol_no_tds": 98.8142,
+      "bootstrap_stats": {
+        "pH": {
+          "mae_mean": 0.0418,
+          "mae_std": 0.0006,
+          "rmse_mean": 0.0545,
+          "rmse_std": 0.0007,
+          "r2_mean": -0.2642,
+          "r2_std": 0.0305
+        },
+        "TDS": {
+          "mae_mean": 0.4945,
+          "mae_std": 0.0607,
+          "rmse_mean": 3.2448,
+          "rmse_std": 1.1524,
+          "r2_mean": 0.9916,
+          "r2_std": 0.0072
+        }
+      }
+    },
+    {
+      "id": "B1",
+      "name": "CNN-BiLSTM (Baseline)",
+      "params": 74153,
+      "latency_1_ms": 56.155,
+      "latency_50_mc_ms": 56.155,
+      "ph_mae": 0.044167,
+      "ph_rmse": 0.05331,
+      "ph_r2": -0.210815,
+      "ph_ci": "0.0443 \u00b1 0.0003",
+      "tds_mae": 53.436563,
+      "tds_rmse": 54.217737,
+      "tds_r2": -0.99296,
+      "tds_ci": "53.34 \u00b1 0.10",
+      "avg_r2": 0.105774,
+      "avg_tol_all_5": 77.6304,
+      "avg_tol_no_tds": 97.038,
+      "bootstrap_stats": {
+        "pH": {
+          "mae_mean": 0.0443,
+          "mae_std": 0.0003,
+          "rmse_mean": 0.0534,
+          "rmse_std": 0.0003,
+          "r2_mean": -0.2179,
+          "r2_std": 0.0209
+        },
+        "TDS": {
+          "mae_mean": 53.3443,
+          "mae_std": 0.1042,
+          "rmse_mean": 54.082,
+          "rmse_std": 0.1865,
+          "r2_mean": -0.9765,
+          "r2_std": 0.2968
+        }
+      }
+    },
+    {
+      "id": "B2",
+      "name": "Vanilla LSTM",
+      "params": 20165,
+      "latency_1_ms": 49.368,
+      "latency_50_mc_ms": 49.368,
+      "ph_mae": 0.036571,
+      "ph_rmse": 0.04455,
+      "ph_r2": 0.154404,
+      "ph_ci": "0.0365 \u00b1 0.0004",
+      "tds_mae": 22.031402,
+      "tds_rmse": 24.50913,
+      "tds_r2": 0.59274,
+      "tds_ci": "22.00 \u00b1 0.14",
+      "avg_r2": 0.53245,
+      "avg_tol_all_5": 86.916,
+      "avg_tol_no_tds": 98.5879,
+      "bootstrap_stats": {
+        "pH": {
+          "mae_mean": 0.0365,
+          "mae_std": 0.0004,
+          "rmse_mean": 0.0445,
+          "rmse_std": 0.0005,
+          "r2_mean": 0.1576,
+          "r2_std": 0.0194
+        },
+        "TDS": {
+          "mae_mean": 22.0036,
+          "mae_std": 0.1414,
+          "rmse_mean": 24.438,
+          "rmse_std": 0.3203,
+          "r2_mean": 0.5961,
+          "r2_std": 0.0635
+        }
+      }
+    },
+    {
+      "id": "B3",
+      "name": "Gated Recurrent Unit",
+      "params": 15877,
+      "latency_1_ms": 65.827,
+      "latency_50_mc_ms": 65.827,
+      "ph_mae": 0.067712,
+      "ph_rmse": 0.082321,
+      "ph_r2": -1.887258,
+      "ph_ci": "0.0674 \u00b1 0.0005",
+      "tds_mae": 73.716169,
+      "tds_rmse": 74.801474,
+      "tds_r2": -2.793465,
+      "tds_ci": "73.58 \u00b1 0.24",
+      "avg_r2": -0.742382,
+      "avg_tol_all_5": 64.7786,
+      "avg_tol_no_tds": 80.9732,
+      "bootstrap_stats": {
+        "pH": {
+          "mae_mean": 0.0674,
+          "mae_std": 0.0005,
+          "rmse_mean": 0.082,
+          "rmse_std": 0.0007,
+          "r2_mean": -1.8677,
+          "r2_std": 0.0389
+        },
+        "TDS": {
+          "mae_mean": 73.5839,
+          "mae_std": 0.2409,
+          "rmse_mean": 74.6732,
+          "rmse_std": 0.2225,
+          "r2_mean": -2.7665,
+          "r2_std": 0.5546
+        }
+      }
+    },
+    {
+      "id": "B4",
+      "name": "Bidirectional LSTM",
+      "params": 25797,
+      "latency_1_ms": 92.507,
+      "latency_50_mc_ms": 92.507,
+      "ph_mae": 0.060335,
+      "ph_rmse": 0.072945,
+      "ph_r2": -1.267061,
+      "ph_ci": "0.0602 \u00b1 0.0006",
+      "tds_mae": 142.995519,
+      "tds_rmse": 147.521139,
+      "tds_r2": -13.754494,
+      "tds_ci": "142.97 \u00b1 0.56",
+      "avg_r2": -3.396499,
+      "avg_tol_all_5": 55.3907,
+      "avg_tol_no_tds": 69.2383,
+      "bootstrap_stats": {
+        "pH": {
+          "mae_mean": 0.0602,
+          "mae_std": 0.0006,
+          "rmse_mean": 0.0729,
+          "rmse_std": 0.0006,
+          "r2_mean": -1.2626,
+          "r2_std": 0.0483
+        },
+        "TDS": {
+          "mae_mean": 142.966,
+          "mae_std": 0.5648,
+          "rmse_mean": 147.5068,
+          "rmse_std": 0.5926,
+          "r2_mean": -13.7194,
+          "r2_std": 2.3208
+        }
+      }
+    },
+    {
+      "id": "B5",
+      "name": "Temporal ConvNet",
+      "params": 65413,
+      "latency_1_ms": 29.406,
+      "latency_50_mc_ms": 29.406,
+      "ph_mae": 0.039189,
+      "ph_rmse": 0.047843,
+      "ph_r2": 0.024782,
+      "ph_ci": "0.0392 \u00b1 0.0004",
+      "tds_mae": 20.145431,
+      "tds_rmse": 22.873326,
+      "tds_r2": 0.645289,
+      "tds_ci": "20.05 \u00b1 0.20",
+      "avg_r2": 0.472855,
+      "avg_tol_all_5": 87.3647,
+      "avg_tol_no_tds": 95.9899,
+      "bootstrap_stats": {
+        "pH": {
+          "mae_mean": 0.0392,
+          "mae_std": 0.0004,
+          "rmse_mean": 0.0478,
+          "rmse_std": 0.0004,
+          "r2_mean": 0.0258,
+          "r2_std": 0.0199
+        },
+        "TDS": {
+          "mae_mean": 20.0477,
+          "mae_std": 0.1956,
+          "rmse_mean": 22.6635,
+          "rmse_std": 0.4554,
+          "r2_mean": 0.6539,
+          "r2_std": 0.0466
+        }
+      }
+    },
+    {
+      "id": "B6",
+      "name": "Transformer Encoder",
+      "params": 53061,
+      "latency_1_ms": 35.495,
+      "latency_50_mc_ms": 35.495,
+      "ph_mae": 0.078104,
+      "ph_rmse": 0.087122,
+      "ph_r2": -2.233869,
+      "ph_ci": "0.0780 \u00b1 0.0007",
+      "tds_mae": 83.550982,
+      "tds_rmse": 85.878924,
+      "tds_r2": -4.000219,
+      "tds_ci": "83.53 \u00b1 0.26",
+      "avg_r2": -1.054213,
+      "avg_tol_all_5": 62.8026,
+      "avg_tol_no_tds": 78.5032,
+      "bootstrap_stats": {
+        "pH": {
+          "mae_mean": 0.078,
+          "mae_std": 0.0007,
+          "rmse_mean": 0.087,
+          "rmse_std": 0.0007,
+          "r2_mean": -2.2262,
+          "r2_std": 0.0738
+        },
+        "TDS": {
+          "mae_mean": 83.5293,
+          "mae_std": 0.2587,
+          "rmse_mean": 85.8308,
+          "rmse_std": 0.321,
+          "r2_mean": -3.9802,
+          "r2_std": 0.7616
+        }
+      }
+    },
+    {
+      "id": "B7",
+      "name": "CNN + GRU Hybrid",
+      "params": 41541,
+      "latency_1_ms": 37.432,
+      "latency_50_mc_ms": 37.432,
+      "ph_mae": 0.042394,
+      "ph_rmse": 0.052603,
+      "ph_r2": -0.178926,
+      "ph_ci": "0.0424 \u00b1 0.0005",
+      "tds_mae": 140.600848,
+      "tds_rmse": 149.475156,
+      "tds_r2": -14.147949,
+      "tds_ci": "140.77 \u00b1 0.99",
+      "avg_r2": -2.793894,
+      "avg_tol_all_5": 61.2242,
+      "avg_tol_no_tds": 76.5302,
+      "bootstrap_stats": {
+        "pH": {
+          "mae_mean": 0.0424,
+          "mae_std": 0.0005,
+          "rmse_mean": 0.0526,
+          "rmse_std": 0.0005,
+          "r2_mean": -0.1773,
+          "r2_std": 0.0154
+        },
+        "TDS": {
+          "mae_mean": 140.7717,
+          "mae_std": 0.9867,
+          "rmse_mean": 149.7066,
+          "rmse_std": 1.0651,
+          "r2_mean": -14.172,
+          "r2_std": 2.4665
+        }
+      }
+    },
+    {
+      "id": "MT-TCN-LSTM",
+      "name": "MT-TCN-LSTM (Proposed)",
+      "params": 75846,
+      "latency_1_ms": 67.704,
+      "latency_50_mc_ms": 3990.14,
+      "ph_mae": 0.041579,
+      "ph_rmse": 0.051569,
+      "ph_r2": -0.133058,
+      "ph_ci": "0.0416 \u00b1 0.0003",
+      "tds_mae": 131.652506,
+      "tds_rmse": 132.947325,
+      "tds_r2": -10.983261,
+      "tds_ci": "131.40 \u00b1 0.21",
+      "avg_r2": -2.176563,
+      "avg_tol_all_5": 61.9917,
+      "avg_tol_no_tds": 77.4896,
+      "bootstrap_stats": {
+        "pH": {
+          "mae_mean": 0.0416,
+          "mae_std": 0.0003,
+          "rmse_mean": 0.0516,
+          "rmse_std": 0.0004,
+          "r2_mean": -0.1329,
+          "r2_std": 0.0156
+        },
+        "TDS": {
+          "mae_mean": 131.4013,
+          "mae_std": 0.2062,
+          "rmse_mean": 132.6973,
+          "rmse_std": 0.2064,
+          "r2_mean": -10.8995,
+          "r2_std": 1.788
+        }
+      }
+    }
+  ],
+  "detailed_metrics": {
+    "B0": {
+      "water_level": {
+        "MAE": 0.0,
+        "RMSE": 0.0,
+        "R2": 1.0,
+        "MAPE": 0.0,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 1.0
+      },
+      "DHT_temp": {
+        "MAE": 0.013265,
+        "RMSE": 0.036177,
+        "R2": 0.995811,
+        "MAPE": 0.0544,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 0.5
+      },
+      "TDS": {
+        "MAE": 0.482429,
+        "RMSE": 3.151529,
+        "R2": 0.993266,
+        "MAPE": 0.0419,
+        "within_tolerance_pct": 99.9606,
+        "tolerance_used": 20.0
+      },
+      "pH": {
+        "MAE": 0.041984,
+        "RMSE": 0.054819,
+        "R2": -0.280368,
+        "MAPE": 0.746,
+        "within_tolerance_pct": 95.2568,
+        "tolerance_used": 0.1
+      },
+      "DHT_humidity": {
+        "MAE": 0.127377,
+        "RMSE": 0.207779,
+        "R2": 0.995611,
+        "MAPE": 0.1734,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 2.0
+      },
+      "aggregate": {
+        "mean_MAE": 0.133011,
+        "mean_RMSE": 0.690061,
+        "mean_R2": 0.740864,
+        "mean_within_tolerance_pct": 99.0435,
+        "mean_within_tolerance_no_tds": 98.8142
+      }
+    },
+    "B1": {
+      "water_level": {
+        "MAE": 0.035381,
+        "RMSE": 0.0375,
+        "R2": 0.0,
+        "MAPE": 3.5381,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 1.0
+      },
+      "DHT_temp": {
+        "MAE": 0.206745,
+        "RMSE": 0.227103,
+        "R2": 0.834919,
+        "MAPE": 0.836,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 0.5
+      },
+      "TDS": {
+        "MAE": 53.436563,
+        "RMSE": 54.217737,
+        "R2": -0.99296,
+        "MAPE": 4.695,
+        "within_tolerance_pct": 0.0,
+        "tolerance_used": 20.0
+      },
+      "pH": {
+        "MAE": 0.044167,
+        "RMSE": 0.05331,
+        "R2": -0.210815,
+        "MAPE": 0.7868,
+        "within_tolerance_pct": 95.493,
+        "tolerance_used": 0.1
+      },
+      "DHT_humidity": {
+        "MAE": 0.729119,
+        "RMSE": 1.003029,
+        "R2": 0.897725,
+        "MAPE": 1.0111,
+        "within_tolerance_pct": 92.6589,
+        "tolerance_used": 2.0
+      },
+      "aggregate": {
+        "mean_MAE": 10.890395,
+        "mean_RMSE": 11.107736,
+        "mean_R2": 0.105774,
+        "mean_within_tolerance_pct": 77.6304,
+        "mean_within_tolerance_no_tds": 97.038
+      }
+    },
+    "B2": {
+      "water_level": {
+        "MAE": 0.024772,
+        "RMSE": 0.027822,
+        "R2": 0.0,
+        "MAPE": 2.4772,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 1.0
+      },
+      "DHT_temp": {
+        "MAE": 0.04385,
+        "RMSE": 0.055734,
+        "R2": 0.990058,
+        "MAPE": 0.1796,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 0.5
+      },
+      "TDS": {
+        "MAE": 22.031402,
+        "RMSE": 24.50913,
+        "R2": 0.59274,
+        "MAPE": 1.9263,
+        "within_tolerance_pct": 40.2283,
+        "tolerance_used": 20.0
+      },
+      "pH": {
+        "MAE": 0.036571,
+        "RMSE": 0.04455,
+        "R2": 0.154404,
+        "MAPE": 0.6517,
+        "within_tolerance_pct": 98.3074,
+        "tolerance_used": 0.1
+      },
+      "DHT_humidity": {
+        "MAE": 0.608571,
+        "RMSE": 0.85866,
+        "R2": 0.925048,
+        "MAPE": 0.8452,
+        "within_tolerance_pct": 96.0441,
+        "tolerance_used": 2.0
+      },
+      "aggregate": {
+        "mean_MAE": 4.549033,
+        "mean_RMSE": 5.099179,
+        "mean_R2": 0.53245,
+        "mean_within_tolerance_pct": 86.916,
+        "mean_within_tolerance_no_tds": 98.5879
+      }
+    },
+    "B3": {
+      "water_level": {
+        "MAE": 0.030306,
+        "RMSE": 0.037511,
+        "R2": 0.0,
+        "MAPE": 3.0306,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 1.0
+      },
+      "DHT_temp": {
+        "MAE": 0.480745,
+        "RMSE": 0.542571,
+        "R2": 0.057748,
+        "MAPE": 1.9397,
+        "within_tolerance_pct": 47.3135,
+        "tolerance_used": 0.5
+      },
+      "TDS": {
+        "MAE": 73.716169,
+        "RMSE": 74.801474,
+        "R2": -2.793465,
+        "MAPE": 6.4656,
+        "within_tolerance_pct": 0.0,
+        "tolerance_used": 20.0
+      },
+      "pH": {
+        "MAE": 0.067712,
+        "RMSE": 0.082321,
+        "R2": -1.887258,
+        "MAPE": 1.197,
+        "within_tolerance_pct": 76.5794,
+        "tolerance_used": 0.1
+      },
+      "DHT_humidity": {
+        "MAE": 0.856487,
+        "RMSE": 0.935334,
+        "R2": 0.911065,
+        "MAPE": 1.1388,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 2.0
+      },
+      "aggregate": {
+        "mean_MAE": 15.030284,
+        "mean_RMSE": 15.279842,
+        "mean_R2": -0.742382,
+        "mean_within_tolerance_pct": 64.7786,
+        "mean_within_tolerance_no_tds": 80.9732
+      }
+    },
+    "B4": {
+      "water_level": {
+        "MAE": 0.020294,
+        "RMSE": 0.021755,
+        "R2": 0.0,
+        "MAPE": 2.0294,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 1.0
+      },
+      "DHT_temp": {
+        "MAE": 1.015223,
+        "RMSE": 1.090305,
+        "R2": -2.804952,
+        "MAPE": 4.1074,
+        "within_tolerance_pct": 8.8565,
+        "tolerance_used": 0.5
+      },
+      "TDS": {
+        "MAE": 142.995519,
+        "RMSE": 147.521139,
+        "R2": -13.754494,
+        "MAPE": 12.5616,
+        "within_tolerance_pct": 0.0,
+        "tolerance_used": 20.0
+      },
+      "pH": {
+        "MAE": 0.060335,
+        "RMSE": 0.072945,
+        "R2": -1.267061,
+        "MAPE": 1.0669,
+        "within_tolerance_pct": 81.6768,
+        "tolerance_used": 0.1
+      },
+      "DHT_humidity": {
+        "MAE": 0.944857,
+        "RMSE": 1.238734,
+        "R2": 0.84401,
+        "MAPE": 1.302,
+        "within_tolerance_pct": 86.42,
+        "tolerance_used": 2.0
+      },
+      "aggregate": {
+        "mean_MAE": 29.007246,
+        "mean_RMSE": 29.988976,
+        "mean_R2": -3.396499,
+        "mean_within_tolerance_pct": 55.3907,
+        "mean_within_tolerance_no_tds": 69.2383
+      }
+    },
+    "B5": {
+      "water_level": {
+        "MAE": 0.02144,
+        "RMSE": 0.026727,
+        "R2": 0.0,
+        "MAPE": 2.144,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 1.0
+      },
+      "DHT_temp": {
+        "MAE": 0.197715,
+        "RMSE": 0.285118,
+        "R2": 0.739803,
+        "MAPE": 0.7932,
+        "within_tolerance_pct": 87.1285,
+        "tolerance_used": 0.5
+      },
+      "TDS": {
+        "MAE": 20.145431,
+        "RMSE": 22.873326,
+        "R2": 0.645289,
+        "MAPE": 1.7639,
+        "within_tolerance_pct": 52.8636,
+        "tolerance_used": 20.0
+      },
+      "pH": {
+        "MAE": 0.039189,
+        "RMSE": 0.047843,
+        "R2": 0.024782,
+        "MAPE": 0.6981,
+        "within_tolerance_pct": 98.0909,
+        "tolerance_used": 0.1
+      },
+      "DHT_humidity": {
+        "MAE": 0.482004,
+        "RMSE": 0.669744,
+        "R2": 0.954401,
+        "MAPE": 0.6644,
+        "within_tolerance_pct": 98.7404,
+        "tolerance_used": 2.0
+      },
+      "aggregate": {
+        "mean_MAE": 4.177156,
+        "mean_RMSE": 4.780552,
+        "mean_R2": 0.472855,
+        "mean_within_tolerance_pct": 87.3647,
+        "mean_within_tolerance_no_tds": 95.9899
+      }
+    },
+    "B6": {
+      "water_level": {
+        "MAE": 0.00955,
+        "RMSE": 0.011056,
+        "R2": 0.0,
+        "MAPE": 0.955,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 1.0
+      },
+      "DHT_temp": {
+        "MAE": 0.493783,
+        "RMSE": 0.497846,
+        "R2": 0.206691,
+        "MAPE": 2.0142,
+        "within_tolerance_pct": 56.5243,
+        "tolerance_used": 0.5
+      },
+      "TDS": {
+        "MAE": 83.550982,
+        "RMSE": 85.878924,
+        "R2": -4.000219,
+        "MAPE": 7.3369,
+        "within_tolerance_pct": 0.0,
+        "tolerance_used": 20.0
+      },
+      "pH": {
+        "MAE": 0.078104,
+        "RMSE": 0.087122,
+        "R2": -2.233869,
+        "MAPE": 1.3927,
+        "within_tolerance_pct": 65.9516,
+        "tolerance_used": 0.1
+      },
+      "DHT_humidity": {
+        "MAE": 1.475139,
+        "RMSE": 1.548203,
+        "R2": 0.756333,
+        "MAPE": 1.9698,
+        "within_tolerance_pct": 91.5371,
+        "tolerance_used": 2.0
+      },
+      "aggregate": {
+        "mean_MAE": 17.121512,
+        "mean_RMSE": 17.60463,
+        "mean_R2": -1.054213,
+        "mean_within_tolerance_pct": 62.8026,
+        "mean_within_tolerance_no_tds": 78.5032
+      }
+    },
+    "B7": {
+      "water_level": {
+        "MAE": 0.019549,
+        "RMSE": 0.027101,
+        "R2": 0.0,
+        "MAPE": 1.9549,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 1.0
+      },
+      "DHT_temp": {
+        "MAE": 0.521133,
+        "RMSE": 0.602256,
+        "R2": -0.160957,
+        "MAPE": 2.1006,
+        "within_tolerance_pct": 43.0033,
+        "tolerance_used": 0.5
+      },
+      "TDS": {
+        "MAE": 140.600848,
+        "RMSE": 149.475156,
+        "R2": -14.147949,
+        "MAPE": 12.3495,
+        "within_tolerance_pct": 0.0,
+        "tolerance_used": 20.0
+      },
+      "pH": {
+        "MAE": 0.042394,
+        "RMSE": 0.052603,
+        "R2": -0.178926,
+        "MAPE": 0.7518,
+        "within_tolerance_pct": 95.9654,
+        "tolerance_used": 0.1
+      },
+      "DHT_humidity": {
+        "MAE": 1.638065,
+        "RMSE": 2.176654,
+        "R2": 0.518362,
+        "MAPE": 2.2758,
+        "within_tolerance_pct": 67.1521,
+        "tolerance_used": 2.0
+      },
+      "aggregate": {
+        "mean_MAE": 28.564398,
+        "mean_RMSE": 30.466754,
+        "mean_R2": -2.793894,
+        "mean_within_tolerance_pct": 61.2242,
+        "mean_within_tolerance_no_tds": 76.5302
+      }
+    },
+    "MT-TCN-LSTM": {
+      "water_level": {
+        "MAE": 0.033365,
+        "RMSE": 0.03582,
+        "R2": 0.0,
+        "MAPE": 3.3365,
+        "within_tolerance_pct": 100.0,
+        "tolerance_used": 1.0
+      },
+      "DHT_temp": {
+        "MAE": 0.406749,
+        "RMSE": 0.47357,
+        "R2": 0.282168,
+        "MAPE": 1.6502,
+        "within_tolerance_pct": 62.5664,
+        "tolerance_used": 0.5
+      },
+      "TDS": {
+        "MAE": 131.652506,
+        "RMSE": 132.947325,
+        "R2": -10.983261,
+        "MAPE": 11.5727,
+        "within_tolerance_pct": 0.0,
+        "tolerance_used": 20.0
+      },
+      "pH": {
+        "MAE": 0.041579,
+        "RMSE": 0.051569,
+        "R2": -0.133058,
+        "MAPE": 0.7403,
+        "within_tolerance_pct": 95.0797,
+        "tolerance_used": 0.1
+      },
+      "DHT_humidity": {
+        "MAE": 2.454839,
+        "RMSE": 3.21179,
+        "R2": -0.048663,
+        "MAPE": 3.4061,
+        "within_tolerance_pct": 52.3125,
+        "tolerance_used": 2.0
+      },
+      "aggregate": {
+        "mean_MAE": 26.917808,
+        "mean_RMSE": 27.344015,
+        "mean_R2": -2.176563,
+        "mean_within_tolerance_pct": 61.9917,
+        "mean_within_tolerance_no_tds": 77.4896
+      }
+    }
+  }
+}
