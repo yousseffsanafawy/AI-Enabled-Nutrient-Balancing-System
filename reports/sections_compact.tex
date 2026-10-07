@@ -94,7 +94,7 @@ MT-TCN-LSTM (Fig.~\ref{fig:arch}) pairs a causal dilated convolutional front end
 \begin{equation}
 R = 1+\sum_{l=1}^{L}(k_l-1)\,d_l = 1+2(1)+2(2) = 7
 \end{equation}
-steps (70~s). Causal padding makes each output depend on past inputs only, and dilation widens the context without pooling, which would discard temporal resolution. A 64-unit unidirectional LSTM then aggregates the convolutional features over the full 15-step (150~s) window and tracks slow ion-uptake trends.
+steps (70~s). Causal padding makes each output depend on past inputs only, and dilation widens the context without pooling, which would discard temporal resolution. A 64-unit unidirectional LSTM then aggregates the convolutional features over the full 15-step (150~s) window and captures slower temporal dynamics in the observed sensor signals.
 
 \begin{figure}[t]
 \centering
@@ -137,11 +137,11 @@ steps (70~s). Causal padding makes each output depend on past inputs only, and d
 \end{figure}
 
 \subsection{Multi-Task Objective}
-Two heads share the representation: a regression head forecasting the retained sensor channels at $t+10$~s, and a classification head predicting whether a biological tolerance deadband is breached ($s\in\{0,1\}$). Training minimizes
+Two heads share the representation: a regression head forecasting the retained sensor channels at $t+10$~s, and an operational classification head predicting whether an agronomic tolerance deadband is breached ($s\in\{0,1\}$). Training minimizes
 \begin{equation}
-\mathcal{L}=(1-\lambda)\,\frac{1}{M}\sum_{m=1}^{M}(\hat y_m-y_m)^2-\lambda\big[s\log\hat s+(1-s)\log(1-\hat s)\big],
+\mathcal{L}=(1-\lambda)\,\frac{1}{M}\sum_{m=1}^{M}(\hat y_m-y_m)^2 + \lambda\,\mathcal{L}_{\mathrm{BCE}}(s,\hat s),
 \end{equation}
-with $\lambda=0.2$. The stress term pushes the shared features toward patterns that precede deadband breaches.
+where $\mathcal{L}_{\mathrm{BCE}} = -\big[s\log\hat s+(1-s)\log(1-\hat s)\big]$ and $\lambda=0.2$. The classification term pushes the shared features toward patterns that precede deadband violations.
 
 \subsection{Epistemic Uncertainty}
 Acting on an overconfident forecast could dose concentrated acid into the sump, so the network reports its own uncertainty. We keep dropout ($p=0.3$) active at inference \cite{gal2016} and run $N=50$ batched stochastic passes per window:
@@ -186,10 +186,10 @@ MT-TCN-LSTM (ours)  & 0.0416 & \textbf{131.65} & \textbf{211.80} & 71.7 & 75.8 \
 
 \textbf{Persistence is a strong floor.} With samples 10~s apart, $\hat y_{t+1}=y_t$ reaches pH MAE 0.0442 and TDS MAE 162.77~ppm (Table~\ref{tab:bench}). Under the earlier report's tolerances ($\pm0.1$ pH, $\pm20$~ppm), this baseline scores 99.04\% aggregated over all sensors without learning anything, so tolerance rates cannot separate a model from a copy of the last reading.
 
-\textbf{Forecast accuracy.} MT-TCN-LSTM has the lowest TDS error (MAE 131.65~ppm, RMSE 211.80~ppm), 19.1\% below persistence. For pH, the plain LSTM is slightly better (0.0414 versus 0.0416), and no model beats persistence by more than 6.3\%; the Transformer does worse than persistence. The margins over the closest baselines are small: 0.3\% in TDS MAE over the TCN, and 0.5\% behind the LSTM in pH MAE. Skill in absolute terms is modest, with test $R^2$ of 0.078 (pH) and 0.165 (TDS). The main benefit of MT-TCN-LSTM is therefore not point accuracy but the stress head and uncertainty estimate that the baselines lack.
+\textbf{Forecast accuracy.} MT-TCN-LSTM provides the lowest TDS error among the evaluated neural models (MAE 131.65~ppm, RMSE 211.80~ppm), 19.1\% below persistence. However, in point regression it closely matches the standalone TCN (132.04~ppm, a marginal 0.3\% difference). For pH, the plain LSTM is slightly better (0.0414 versus 0.0416), and no model beats persistence by more than 6.3\%; the Transformer does worse than persistence. Skill in absolute terms is modest, with test $R^2$ of 0.078 (pH) and 0.165 (TDS). The primary motivation for MT-TCN-LSTM is therefore architectural: the convolutional front end stabilizes multi-task training without the catastrophic collapse observed in pure LSTM models (A2), while adding out-of-bounds detection and epistemic uncertainty that single-task baselines lack.
 
-\subsection{Stress Detection and Safety Layer}
-The stress head reaches recall 1.000, F1 0.9404 (which implies precision of about 0.89) and ROC-AUC 0.9995 on the test partition. In fault-injection tests, the safety layer blocked all 436 injected hazardous commands. With zero misses in 436 trials, the 95\% rule-of-three lower bound on the block rate is 99.3\%.
+\subsection{Operational Out-of-Bounds Detection and Safety Verification}
+The operational out-of-bounds detector (identifying whether sensor readings breach horticultural deadbands within the lookback window) reaches recall 1.000, F1 0.9404 (precision $\approx 0.89$) and ROC-AUC 0.9995 on the test partition. In deterministic fault-injection tests, the safety layer blocked all 436 injected hazardous commands. With zero misses in 436 trials, the 95\% rule-of-three lower bound on the implementation block rate is 99.3\%.
 
 \subsection{Ablation Study}
 Table~\ref{tab:ablate} varies one component at a time under the same conditions.
@@ -220,8 +220,8 @@ Removing the convolutional front end (A2) raises TDS MAE by 73.4\% (131.65 to 22
 %======================================================================
 \section{Discussion}\label{sec:discussion}
 
-\subsection{Replicated Titration Experiments}
-The original study documented two manual trials with nitric acid. We extended physical validation to ten trials: acid (0.1~M HNO$_3$), base (0.1~M KOH) and concentrated nutrient shocks (A+B formula).
+\subsection{Small-Scale Physical Intervention Evaluation}
+The original study documented two manual trials with nitric acid. We conducted a small-scale physical intervention evaluation across ten trials ($N=10$): acid (0.1~M HNO$_3$), base (0.1~M KOH) and concentrated nutrient shocks (A+B formula).
 
 \begin{table}[t]
 \caption{Titration Trials ($N=10$)}
@@ -247,7 +247,7 @@ The original study documented two manual trials with nitric acid. We extended ph
 \end{tabular}
 \end{table}
 
-The mean absolute error over all trials is 0.433~pH, which is 44.4\% below the original baseline. It is also roughly ten times the 0.0416 telemetry MAE. By intervention type the mean error is 0.26 (acid), 0.28 (nutrient) and 0.83 (base). Predictions stay between 5.40 and 5.71 while targets range from 5.15 to 7.05, so the model pulls toward the pH range seen in training and cannot follow large base doses (trial~7, error 1.32).
+Across the ten physical trials, the mean absolute error is 0.433~pH (roughly ten times the 0.0416 telemetry MAE). Crucially, physical intervention tests revealed a substantial distribution-shift limitation: the model remained close to the training-domain pH range (predictions stayed between 5.40 and 5.71 while targets reached 7.05) and failed to accurately extrapolate large base interventions (Trial~7, error 1.32). By intervention type the mean error was 0.26 (acid), 0.28 (nutrient) and 0.83 (base).
 
 \subsection{Embedded Deployment}
 We tested whether MT-TCN-LSTM can run on an ESP32-WROOM-32 (240~MHz Xtensa LX6, 520~KB SRAM, 4~MB flash). INT8 dynamic-range quantization shrinks the FP32 model from 319.3~KB to 112.5~KB (64.8\% smaller), which fits flash easily. Runtime memory is the obstacle. After FreeRTOS, the lwIP stack and TLS certificates, about 160~KB of heap remains, and the LSTM's dynamic tensor arrays (\texttt{TensorArrayV2}) need TensorFlow Lite Micro Select TF ops that bring allocation close to failure.
@@ -255,7 +255,7 @@ We tested whether MT-TCN-LSTM can run on an ESP32-WROOM-32 (240~MHz Xtensa LX6, 
 We therefore split the work. The ESP32 handles hard real-time 10~s ADC polling, de-noising and relay pulse-width modulation. A local gateway (Raspberry Pi~4 or Jetson Nano) hosts the quantized TFLite model and runs inference, MC dropout and safety triage in 71.69~ms over local MQTT. If the gateway is silent for more than 30~s, the ESP32 falls back to hardcoded deadbands.
 
 \subsection{Feature Attribution}
-Permutation feature importance and Integrated Gradients \cite{sundararajan2017} show that ambient channels carry 85.7\% of the forecasting attribution (humidity 45.79\%, temperature 39.93\%). Vapor pressure deficit drives transpiration and hence evaporative concentration of salts, which is consistent with this ranking. A 10~s horizon is short for that mechanism, however, and the ambient channels are themselves forecast targets, so the result may also reflect shared diurnal drift. For stress classification, permuting TDS gives the largest ROC-AUC drop (0.0587), indicating that the detector relies on the nutrient reading rather than ambient signals.
+Permutation feature importance and Integrated Gradients \cite{sundararajan2017} show that ambient channels carry 85.7\% of the forecasting attribution (humidity 45.79\%, temperature 39.93\%). While transpiration mechanics predict strong environmental influence on nutrient concentration, at a 10~s forecasting horizon this high attribution primarily reflects shared diurnal drift and ambient cross-correlation rather than direct physical causation. For out-of-bounds classification, permuting TDS gives the largest ROC-AUC drop (0.0587), confirming that the classifier relies on the nutrient reading rather than ambient signals.
 
 \subsection{Limitations}
 The data come from one facility over six days, so seasonal and crop-stage variation is not covered. The titration set has ten trials. The stress labels derive from the same pH and TDS deadbands that the classifier observes, and no rule-based baseline for stress detection is reported, so near-perfect scores should be read with that in mind. To the extent that the injected faults match the Tier~1--2 rules, the 436/436 result validates the implementation rather than the safety layer's behavior on unseen faults. Finally, the 90\% intervals over-cover, which makes Tier~3 conservative: it will suppress some dosing that a tighter estimate would allow.
